@@ -1,0 +1,88 @@
+<?php
+/**
+* 
+* transaction_id
+* tsCreated
+* amount
+* freight
+* items
+* first_name
+* last_name
+* email
+* address
+* city
+* state
+* country
+* zip
+* phone
+* ship_to_first_name
+* ship_to_last_name
+* ship_to_address
+* ship_to_city
+* ship_to_state
+* ship_to_zip
+* ship_to_country
+* 
+*/
+class Resource_Transaction extends My_Model_Resource_Db_Table_Abstract
+{
+	protected $_name = 'transaction';
+	protected $_rowClass = 'Resource_Transaction_Item';
+	protected $_referenceMap = array(
+		'User' => array(
+			'columns' => array('user'),
+			'refColumns' => array('id'),
+			'refTableClass' => 'Resource_User'
+		),
+	);
+	protected $_dependentTables = array(
+		'Resource_Reservation'
+	);
+	
+	public function saveTransaction($user, $response, $row = null, $cart)
+	{
+		$response = (array) $response;
+		
+		if ($row === null) {
+			$row = $this->createRow();
+			$row->ts_created = date(DATE_ATOM, time());
+			$row->user = $user->id;
+			$row->coupon_code = $cart->getCoupon()->code;
+		}
+		
+		$columns = $this->info('cols');
+		foreach ($columns as $column) {
+			if (array_key_exists($column, $response)) {
+				$row->$column = $response[$column];
+				unset($response[$column]);
+			}
+		}
+		
+		// need to save the meta
+		if (!$id = $row->save()) {
+			return false;
+		}
+		
+		// return id to pass last insert Id back to caller
+		return $id;
+	}
+	
+	public function getTransaction($transaction_id)
+	{
+		$select = $this->select();
+		$select->where('`transaction_id` = ?', $transaction_id);
+		
+		return $this->fetchRow($select);
+	}
+	
+	public function getTransactions($options)
+	{
+		$select = $this->select();
+		
+		if (isset($options['order'])) {
+			$select->order($options['order']);
+		}
+		
+		return $this->fetchAll($select);
+	}
+}

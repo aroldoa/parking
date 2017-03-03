@@ -1,0 +1,16 @@
+<div id="reservation-index" class="sixteen columns">
+	<h2><?php echo $this->title; ?></h2>
+</div>
+<div id="dashboard">
+	<div class="eight columns">
+		<a href="<?php echo $this->url(array('controller'=>'reservation','action'=>'view'), 'default', true) ?>" class="button">
+			View Reservations
+		</a>
+	</div> 
+	
+	<div class="eight columns">
+		<a href="<?php echo $this->url(array('controller'=>'reservation','action'=>'create'), 'default', true) ?>" class="button">
+			Create a Reservation
+		</a>
+	</div>
+</div>

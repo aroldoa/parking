@@ -1,0 +1,46 @@
+Cruise Parking Reservation Confirmation
+
+<h1><?php echo $this->data['user']->fullname; ?>, thank you for your reservation</h1>
+
+<div>
+	
+	<strong>The details of your reservation are below:</strong>
+
+	<?php foreach ($this->data['transaction']->reservations as $reservation): ?>
+	<div style="margin : 10px 0;">
+		
+		<p style="font-style: italic;font-weight: bold;font-size : 1.1em"><?php echo $reservation->quantity ?> <?php echo $reservation->type ?> Parking spot<?php if ($reservation->quantity > 1) echo "'s"; ?> sailing on <?php echo $reservation->cruise->ship->name ?> for <?php echo $reservation->days ?> starting on <?php echo $reservation->fromDate ?></p>
+		
+		<br />
+		
+		<div>
+			<strong>Parking Lot Location:</strong>
+			<br />
+			<a href="<?php echo $reservation->lot->googleMapUrl; ?>">
+			<?php echo $reservation->lot->name ?></a>
+			<br />
+			<?php echo $reservation->lot->address ?>
+			<br />
+			<?php echo $reservation->lot->city ?>, <?php echo $reservation->lot->state ?>.
+			<br />
+			<?php echo $reservation->lot->zip ?>
+			<br />
+		</div>
+	</div> 
+	<?php endforeach ?>
+	
+	<br />
+	
+	<strong>Billing Summary</strong>
+	<div>
+		Your card ending in <?php echo $this->data['transaction']->account_number ?> has been charged <?php echo $this->data['transaction']->amount; ?>.
+		<br />
+		Your <strong>Transaction Id is: "<?php echo $this->data['transaction']->transaction_id; ?>"</strong>
+	</div>
+
+	<p>
+		<span style="font-size:1.1em;font-weight:bold">Important Details</span>
+		<br />
+		<?php echo nl2br($this->data['siteSettings']->emailText); ?>
+	</p>
+</div>

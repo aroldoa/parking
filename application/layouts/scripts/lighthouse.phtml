@@ -1,0 +1,69 @@
+<?php echo $this->doctype() . "\n"; ?>
+<html lang="en">
+<head>
+<?php 
+echo $this->headMeta() . "\n"; 
+echo $this->headTitle() . "\n";
+echo $this->headStyle() . "\n";
+echo $this->headLink() . "\n";
+echo $this->headScript() . "\n";
+?>
+<link rel="shortcut icon" href="/favicon.ico" />
+<?php 
+echo $this->SiteSettings()->analytics ?>
+</head>
+<body>
+	<div class="container">
+		
+		<div id="header"><h1 class="no-display"><?php echo $this->siteSettings()->siteName; ?></h1></div><!-- end #header -->
+		<div id="containerMiddle">
+			
+			<div id="nav">
+				<div class="menu-main-nav-container">
+					<ul id="menu-main-nav" class="menu">
+						<li>
+							<a href="http://www.lighthouseparking.org/">Main Site</a>
+						</li>
+
+						<li>
+							<a href="<?php echo $this->url(array('controller' => 'index'), 'default', true); ?>">Search Parking</a>
+						</li>
+						
+						<?php
+						if ($this->identity) {
+						?>
+						<li>
+							<a href="<?php echo $this->url(array('controller' => 'admin'), 'default', true); ?>">
+								Dashboard
+							</a>
+						</li>
+						<?php
+						}
+						?>
+					</ul>
+				</div>
+			</div>
+			
+			<div id="content">
+				<?php 
+				// display the messenger if necessary
+				echo $this->render('_adminMessages.phtml'); 
+				echo $this->layout()->content; ?>
+				<div class="clear"></div>
+			</div> <!-- end .content -->
+			
+			<div id="footer"> 
+				<table class="columns sixteen">
+					<tr>
+						<td width="502" align="left" valign="middle">
+							&copy; 2012 Light House Parking, All rights reserved 
+						</td>
+						<td width="426">&nbsp;</td>
+					</tr>
+				</table>
+			</div><!-- end #footer -->
+			
+		</div> <!-- end .containerMiddle -->
+	</div> <!-- end .container -->
+</body>
+</html>

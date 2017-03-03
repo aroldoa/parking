@@ -1,0 +1,86 @@
+<div id="cruise-dates" class="modal">
+	<div id="dates-navigation">
+		<div id="prev-month" class="month-navigation">
+			&larr;
+		</div> <!-- end #prev-month -->
+		
+		<div id="next-month" class="month-navigation">
+			&rarr;
+		</div> <!-- end #next-month -->
+		<div id="current-month-year">
+			<?php echo $this->cMonth; ?>/<?php echo $this->cYear ?>
+		</div> <!-- end #current-month-year -->
+		
+	</div> 
+	<table>
+		<thead>
+			<tr>
+				<th>
+					Su
+				</th>
+
+				<th>
+					Mo
+				</th>
+
+				<th>
+					Tu
+				</th>
+
+				<th>
+					We
+				</th>
+
+				<th>
+					Th
+				</th>
+
+				<th>
+					Fr
+				</th>
+
+				<th>
+					Sa
+				</th>
+			</tr>
+		</thead>
+
+		<tbody>
+		<?php
+		$timestamp = mktime(0,0,0,$this->cMonth,1,$this->cYear);
+		$maxday = date("t",$timestamp);
+		$thismonth = getdate ($timestamp);
+		$startday = $thismonth['wday'];
+
+		for ($i=0; $i<($maxday+$startday); $i++) {
+			$date = $i - $startday + 1;
+			if(($i % 7) == 0 ) :
+			?>
+		    <tr>
+			<?php
+			endif;
+			if($i < $startday) :
+			?>
+		    <td></td>
+			<?php
+			elseif (array_key_exists(date('m/d/y', mktime(0,0,0,$this->cMonth, $date, $this->cYear)), $this->cruises)) :
+			?>
+			<td class="has-cruise"><?php echo $date; ?></td>
+			<?php
+			else:
+			?>
+			<td><?php echo $date; ?></td>
+			<?php
+			endif;
+
+			if ((($i % 7) == 6) || ($i == ($maxday + $startday -1))) :
+			?>
+		</tr>
+			<?php
+		endif;
+		}
+		?>
+		</tbody>
+
+	</table>
+</div> <!-- end cruise-dates -->

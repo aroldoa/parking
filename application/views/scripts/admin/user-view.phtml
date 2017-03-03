@@ -1,0 +1,84 @@
+<div id="admin-user-view" class="sixteen columns">
+	<h2>User Details</h2>
+	<dl>
+	    <dt>
+	    	User Name:
+	    </dt>
+	
+		<dd>
+			<?php echo $this->user->fullname; ?>
+		</dd>
+		
+		<dt>
+			Email:
+		</dt>
+		
+		<dd>
+			<?php echo $this->user->email; ?>
+		</dd>
+		
+		<dt>
+			Role:
+		</dt>
+		
+		<dd>
+			<?php echo ucfirst($this->user->role); ?>
+		</dd>
+		<?php if ($this->user->phone): ?>
+		<dt>
+			Phone:
+		</dt>
+		
+		<dd>
+			<?php echo $this->user->phone; ?>
+		</dd>
+		<?php 
+		endif;
+		if ($this->user->address): ?>
+		<dt>
+			Address:
+		</dt>
+		
+		<dd>
+			<ul>
+				<li>
+					<?php echo $this->user->address; ?>
+				</li>
+				
+				<li>
+					<?php echo $this->user->city; ?>, <?php echo $this->user->state; ?>. <?php echo $this->user->zip ?>
+				</li>
+			</ul>
+		</dd>
+		<?php endif; ?>
+		<dt>
+			Created:
+		</dt>
+		
+		<dd>
+			<?php echo $this->user->dateJoined; ?>
+		</dd>
+		<?php if (count($this->user->reservations) > 0): ?>
+		<dt>
+			Reservations: 
+		</dt>
+		
+		<dd>
+			<?php echo count($this->user->reservations) ?>
+		</dd>
+		<?php endif; ?>
+	</dl>
+	<div class="button-group">
+		<?php if (count($this->user->reservations) > 0): ?>
+		<a href="<?php echo $this->url(array(
+			'controller' => 'reservation',
+			'action' => 'list', 
+			'user' => $this->user->id
+		), 'default', true) ?>" class="button">View Reservations</a>
+		<?php endif; ?>
+		<a href="<?php echo $this->url(array('controller' => 'reservation', 'action' => 'create', 'user' => $this->user->id), 'default', true) ?>" class="button">Create User Reservation</a>
+		<a href="<?php echo $this->url(array('controller' => 'admin', 'action' => 'user-edit', 'id' => $this->user->id), 'default', true) ?>" class="button">Edit User Details</a>
+
+		<a href="<?php echo $this->url(array('controller' => 'admin', 'action' => 'users'), 'default', true) ?>" class="button">Back</a>
+	</div>
+</div> <!-- end #admin-user-view -->

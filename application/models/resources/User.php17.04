@@ -1,0 +1,202 @@
+<?php
+/**
+* 
+*/
+class Resource_User extends My_Model_Resource_Db_Table_Abstract
+{
+	
+	protected $_name = 'user';
+    protected $_primary = 'id';
+    protected $_rowClass = 'Resource_User_Item';
+	protected $_dependentTables = array(
+		'Resource_Transaction',
+		'Resource_Reservation'
+	);
+
+	/**
+	 * get a user by id column
+	 *
+	 * @param string|int $id 
+	 * @return Resource_User_Item
+	 * @author Eric Akkerman
+	 */
+    public function getUserById($id)
+    {
+        return $this->find($id)->current();
+    }
+    
+	/**
+	 * get a user by email column
+	 *
+	 * @param string $email 
+	 * @param bool $ignoreUser 
+	 * @return Resource_User_Item
+	 * @author Eric Akkerman
+	 */
+    public function getUserByEmail($email, $ignoreUser = null)
+    {
+        $select = $this->select();
+        $select->where('email = ?', $email);
+
+        if (null !== $ignoreUser) {
+            $select->where('email != ?', $ignoreUser->email);
+        }
+
+        return $this->fetchRow($select);
+    }
+    
+	/**
+	 * retrieve multiple users
+	 *
+	 * @param bool $paged 
+	 * @param array $order 
+	 * @return Resource_User_Rowset
+	 * @author Eric Akkerman
+	 */
+    public function getUsers($options)
+    {
+        $select = $this->select();
+        
+        if (isset($options['order'])) {
+			$select->order($options['order']);
+		}
+		
+		if (isset($options['role']) && $options['role'] != null) {
+			$select->where('`role` = ?', $options['role']);
+		}
+		
+		if (isset($options['first_name']) && $options['first_name'] != null) {
+			$select->where('`first_name` like ?', $options['first_name'].'%');
+		}
+		
+		if (isset($options['last_name']) && $options['last_name'] != null) {
+			$select->where('`last_name` like ?', $options['last_name'].'%');
+		}
+		
+		if (isset($options['state'])) {
+			$select->where('`state` = ?', $options['state']);
+		}
+		
+		if (isset($options['zip'])) {
+			$select->where('`zip` = ?', $options['zip']);
+		}
+		
+        $page = isset($options['page']) ? $options['page'] : null;
+
+        if (null !== $page) {
+			$adapter = new Zend_Paginator_Adapter_DbTableSelect($select);
+			$count = clone $select;
+			$count->reset(Zend_Db_Select::COLUMNS);
+			$count->reset(Zend_Db_Select::FROM);
+			$count->from('user', new Zend_Db_Expr('COUNT(*) AS `zend_paginator_row_count`'));
+			$adapter->setRowCount($count);
+
+			$paginator = new Zend_Paginator($adapter);
+			$paginator->setItemCountPerPage(15)
+		          	  ->setCurrentPageNumber((int) $options['page']);
+			return $paginator;
+		}
+		
+        return $this->fetchAll($select);
+    }
+	
+	public function getUserByUsername($username = null)
+	{
+		if ($username == null) {
+			return false;
+		}
+		
+		$select = $this->select();
+		$select->where('username = ?', $username);
+		
+		return $this->fetchRow($select);
+	}
+	
+	/**
+	 * update user login information
+	 *
+	 * @param int $userId 
+	 * @return bool
+	 * @author Eric Akkerman
+	 */
+	public function updateLogin($user)
+	{
+		$ipAddress = $_SERVER['REMOTE_ADDR'];
+
+		$data = array(
+			'last_login' => date(DATE_ATOM, time()),
+			'ip' 	=> $ipAddress
+		);
+		
+		// $this->update($data, $where);
+		return $this->saveUser($data, $user);
+	}
+	
+	public function saveUser($info, $row = null)
+	{ 
+		$ignore = array(
+			'password',
+			'confirm'
+		);
+		
+		if ($row === null) {
+			$row = $this->createRow();
+			$row->created = date('Y-m-d', time());
+			// $hashPassword = true;
+			$row->role = 'customer';
+		}
+		
+		$columns = $this->info('cols');
+		foreach ($columns as $column) {
+			
+			if (in_array($column, $ignore)) {
+				continue;
+			}
+			
+			if (array_key_exists($column, $info)) {
+				$row->$column = $info[$column];
+				unset($info[$column]);
+			}
+		}
+		
+		if (isset($info['password'])) {
+			$row->password = md5($info['password']);
+			unset($info['password']);
+		}
+		
+		// need to save the meta
+		if (!$id = $row->save()) {
+			return false;
+		}
+		
+		// if (count($info) > 0) {
+		// 			if (!$this->saveMeta($id, $info)) {
+		// 				return false;
+		// 			}
+		// 		}
+		
+		// return id to pass last insert Id back to caller
+		return $id;
+	}
+	
+	/**
+	 * delete a user and all dependent data
+	 *
+	 * @param string $user 
+	 * @return void
+	 * @author Eric Akkerman
+	 */
+	public function deleteUser($user)
+    {
+        if (!$user instanceof Resource_User_Item) {
+            $userId = (int) $user;
+			$user = $this->getUserById($userId);
+        }
+        
+        if (null === $user) {
+            return false;
+        }
+		
+		return $this->deleteRow($user);
+    }
+}

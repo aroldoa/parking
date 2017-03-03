@@ -1,0 +1,7 @@
+<?php if ($this->identity): ?>
+<div id="identity-info">
+	<a href="<?php echo $this->url(array('controller' => 'admin'), 'default', true) ?>">
+		Logged in as <?php echo $this->identity->fullname ?>
+	</a>
+</div> <!-- end name -->	
+<?php endif ?>

@@ -1,0 +1,73 @@
+<div id="cart">
+	<table>
+		<thead>
+			<tr>
+				<th>
+					Spot Information
+				</th>
+				
+				<th>
+					Days
+				</th>
+				
+				<th>
+					Spots
+				</th>
+				
+				<th>
+					Line Total
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php
+			$i = 0;
+			foreach ($this->cartModel as $item) :
+			?>
+			<tr <?php if ($i % 2){ echo 'class="odd"';}; ?>>
+				<td>
+					"<?php echo $item->spot->type; ?>" Parking 
+					<br />
+					(<?php echo $item->from ?> &mdash; <?php echo $item->to; ?>)
+				</td>
+				<td>
+					<?php echo $item->days ?> Day<?php if ($item->days != 1) echo "'s" ?>
+				</td>
+				<td>
+					<?php echo $item->quantity?> Spot<?php if ($item->quantity != 1) echo "'s" ?>
+				</td>
+				<td class="last">
+					$<?php echo number_format($item->getTotal(), 2); ?>
+				</td>
+			</tr>
+			<?php
+			++$i;
+			endforeach;
+			?>
+			<tr id="total-row" <?php if ($i % 2){ echo 'class="odd"';} ++$i; ?>>
+				<td colspan="3" class="">
+					Tax: (<?php echo $this->cartModel->getTaxRate() * 100; ?>%)
+				</td>
+				<td class="last">
+					$<?php echo number_format($this->cartModel->getTaxCost(), 2); ?>
+				</td>
+			</tr>
+			<tr id="total-row" <?php if ($i % 2){ echo 'class="odd"';} ++$i; ?>>
+				<td colspan="3" class="">
+					Grand Total:
+				</td>
+				<td class="last">
+					$<?php echo number_format($this->cartModel->getTotal(), 2); ?>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+	<div class="button-group">
+		<a href="<?php echo $this->url(array(
+			'controller' => 'index', 'action' => 'view'), 'default', true) ?>" class="button">
+			Edit Cart
+		</a>
+	</div> 
+	
+</div>

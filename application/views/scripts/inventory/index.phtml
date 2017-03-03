@@ -1,0 +1,18 @@
+<div id="inventory-index" class="sixteen columns">
+	<h2>
+		Choose lot to check inventory
+	</h2>
+</div>
+<div id="dashboard">
+	<?php
+	foreach ($this->lots as $lot) :
+	?>
+	<div class="eight columns">
+		<a href="<?php echo $this->url(array('controller' => 'inventory', 'action' => 'view', 'lot' => $lot->id)) ?>" class="button">
+			<?php echo $lot->name ?>
+		</a> <!-- end .inventory-lot -->
+	</div>
+	<?php
+	endforeach;
+	?>
+</div> <!-- end #inventory-index -->

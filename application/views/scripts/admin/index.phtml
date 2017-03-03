@@ -1,0 +1,55 @@
+<div id="admin-index" class="sixteen columns">
+	<h2>
+		<?php echo $this->title; ?>
+	</h2>
+</div>
+<div id="dashboard">
+	<div class="eight columns">
+		<a href="<?php echo $this->url(array('controller'=>'inventory'), 'default', true) ?>" class="button">
+			Inventory Manager
+		</a>
+	</div>
+	
+	<div class="eight columns">
+		<a href="<?php echo $this->url(array('controller'=>'reservation'), 'default', true) ?>" class="button">
+			Reservations
+		</a>
+	</div>
+	
+	<div class="eight columns">
+		<a href="<?php echo $this->url(array('controller'=>'admin','action'=>'users'), 'default', true) ?>" class="button">
+			User Manager
+		</a>
+	</div>
+	
+	<div class="eight columns">
+		<a href="<?php echo $this->url(array('controller'=>'lot'), 'default', true) ?>" class="button">
+			Lot Manager
+		</a>
+	</div> 
+	
+	<div class="eight columns">
+		<a href="<?php echo $this->url(array('controller'=>'ship'), 'default', true) ?>" class="button">
+			Ship/Cruise Manager
+		</a>
+	</div>
+	
+	<div class="eight columns">
+		<a href="<?php echo $this->url(array('controller'=>'admin','action'=>'export'), 'default', true) ?>" class="button">
+			Export Data
+		</a>
+	</div>
+	
+	<div class="eight columns">
+		<a href="<?php echo $this->url(array('controller'=>'admin','action'=>'settings'), 'default', true) ?>" class="button">
+			Site Settings
+		</a>
+	</div>
+	
+	<div class="eight columns">
+		<a href="<?php echo $this->url(array('controller'=>'admin','action'=>'coupons'), 'default', true) ?>" class="button">
+			Coupons
+		</a>
+	</div>
+	
+</div> <!-- end admin-index -->

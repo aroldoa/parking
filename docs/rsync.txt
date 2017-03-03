@@ -1,0 +1,1 @@
+rsync -azv /Users/ericopter/Server/??? username@host:/home/username/???

@@ -1,0 +1,78 @@
+<div id="reservation-view" class="sixteen columns">
+	<h2><?php echo $this->title; ?></h2>
+	<dl>
+	    <dt>
+	    	Customer Name:
+	    </dt>
+	
+		<dd>
+			<a href="<?php echo $this->url(array('controller' => 'admin', 'action' => 'user-view', 'id' => $this->reservation->user->id), 'default', true); ?>">
+				<?php echo $this->reservation->user->fullname; ?>
+			</a>
+		</dd>
+		
+		<dt>
+			Transaction Id:
+		</dt>
+		
+		<dd>
+			<?php echo $this->reservation->transaction->transaction_id; ?>
+		</dd>
+		
+		<dt>
+			Location:
+		</dt>
+		
+		<dd>
+			<?php echo $this->reservation->lot->name; ?>
+		</dd>
+		
+		<dt>
+			Spot Type:
+		</dt>
+		
+		<dd>
+			<?php echo $this->reservation->type; ?>
+		</dd>
+		
+		<dt>
+			Number Spots:
+		</dt>
+		
+		<dd>
+			<?php echo $this->reservation->quantity; ?>
+		</dd>
+		
+		<dt>
+			Start Date
+		</dt>
+		
+		<dd>
+			<?php echo $this->reservation->fromDate; ?>
+		</dd>
+		
+		<dt>
+			End Date
+		</dt>
+		
+		<dd>
+			<?php echo $this->reservation->toDate; ?>
+		</dd>
+		
+		<dt>
+			Reservation Status
+		</dt>
+		
+		<dd>
+			<?php echo ucfirst($this->reservation->status); ?>
+		</dd>
+	</dl>
+	<div class="button-group">
+		<?php if ($this->reservation->status != 'complete'): ?>
+			<a href="<?php echo $this->url(array('controller' => 'reservation', 'action' => 'set-status', 'id' => $this->reservation->id), 'default', true) ?>" class="button">Check In</a>
+		<?php endif; ?>
+		<a href="<?php echo $this->url(array('controller' => 'reservation', 'action' => 'edit', 'id' => $this->reservation->id), 'default', true) ?>" class="button">Edit Reservation</a>
+		<a href="<?php echo $this->url(array('controller' => 'admin', 'action' => 'user-view', 'id' => $this->reservation->user->id), 'default', true) ?>" class="button">User Details</a>
+		<a href="<?php echo $this->url(array('controller' => 'reservation', 'action' => 'list', 'user' => $this->reservation->user->id), 'default', true) ?>" class="button">Back</a>
+	</div>
+</div> <!-- end #reservation-view -->

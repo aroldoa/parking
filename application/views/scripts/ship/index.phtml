@@ -1,0 +1,64 @@
+<div id="ship-index" class="sixteen columns">
+	<h2><?php echo $this->title; ?></h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Ship</th>
+				<th>Lot</th>
+				<th>Status</th>
+				<th>View</th>
+			</tr>
+		</thead>
+		<tfoot>
+			<tr>
+				<th>Ship</th>
+				<th>Lot</th>
+				<th>Status</th>
+				<th>View</th>
+			</tr>
+		</tfoot>
+		<tbody class="highlight">
+	<?php
+	if (!count($this->ships) > 0) :
+	?>
+	<tr>
+		<td colspan="4">
+			No Ships Created
+		</td>
+	</tr>
+	<?php
+	endif;
+	foreach ($this->ships as $ship) {
+	?>
+	<tr class="<?php echo $this->cycle(array('', 'odd'))->next(); ?>">
+
+		<td>
+			<a href="<?php echo $this->url(array('controller'=>'ship', 'action'=>'view', 'id'=>$ship->id), 'default', true); ?>">
+				<?php echo $ship->name; ?>
+			</a>
+		</td>
+
+		<td>
+			<?php echo $ship->lotName; ?>
+		</td>
+		
+		<td>
+			<?php echo ucfirst($ship->status); ?>
+		</td>
+
+		<td class="last">
+			<a href="<?php echo $this->url(array('controller'=>'ship', 'action'=>'view', 'id'=>$ship->id), 'default', true); ?>" class="button">View</a>
+		</td>
+	</tr>
+	<?php
+	}
+	?>
+		</tbody>
+	</table>
+	<div class="button-group">
+		<a href="<?php echo $this->url(array('controller' => 'ship', 'action' => 'ship-edit'), 'default') ?>" class="button">
+			Add Ship
+		</a>
+	</div>
+	
+</div> <!-- end #ship-index -->

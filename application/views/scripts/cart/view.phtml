@@ -1,0 +1,12 @@
+<div class="fourteen columns offset-by-one">
+	<h2>View Your Cart</h2>
+	<?php
+	if ($this->cartModel->isEmpty()) :
+	?>
+	<p>There are no items in your cart.</p>
+	<?php
+	else:
+	echo $this->Cart()->cartTable();
+	endif;
+	?>
+</div>

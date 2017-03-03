@@ -1,0 +1,109 @@
+<h4>Your Cart</h4>
+<table id="cart-table">
+	<thead>
+		<tr>
+			<th>
+				Spot Information
+			</th>
+			
+			<th>
+				Days
+			</th>
+			
+			<th>
+				Spots
+			</th>
+			
+			<th>
+				Line Total
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php
+		$i = 0;
+		foreach ($this->element->getModel() as $item) :
+		?>
+		<tr <?php if ($i % 2){ echo 'class="odd"';}; ?>>
+			<td>
+				"<?php echo $item->spot->type; ?>" Parking at "<?php echo $item->lot->name ?>" 
+				<br />
+				Cruising <?php echo $item->cruise->ship->name; ?> on <?php echo $item->from ?>
+			</td>
+			<td>
+				<?php echo $item->days ?> Day<?php if ($item->days != 1) echo "'s" ?>
+			</td>
+			<td>
+				<?php echo $this->element->qtys->getElement(
+					$item->id) ?>
+			</td>
+			<td class="last">
+				$<?php echo number_format($item->getTotal(), 2); ?>
+			</td>
+		</tr>
+		<?php
+		++$i;
+		endforeach;
+		
+		// coupon/discount row
+		?>
+		<tr class="<?php if ($i % 2){ echo ' odd';} ++$i; ?>">
+		<?php
+		if ($this->element->getModel()->getDiscount() > 0): ?>
+			<td colspan="3">
+				Applied Discount (<?php echo $this->element->getModel()->getCoupon()->description; ?>)
+			</td>
+			<td class="last">
+				- $<?php echo number_format($this->element->getModel()->getDiscount(), 2); ?>
+			</td>
+		<?php else: ?>
+			<td>
+				Apply Discount
+			</td>
+			<td class="coupon bold last" colspan="3">
+				<?php echo $this->element->coupon->getElement('coupon');
+				echo $this->element->coupon->getElement('applycoupon'); ?>
+			</td>
+		
+		<?php endif; ?>
+		</tr>
+		
+		<tr id="tax-row" class="<?php if ($i % 2){ echo ' odd';} ++$i; ?>">
+			<td colspan="3" class="rt">
+				Sub-Total
+			</td>
+			<td class="last bold">
+				$<?php echo number_format($this->element->getModel()->getSubTotal(), 2); ?>
+			</td>
+		</tr>
+		
+		<tr id="tax-row" class="<?php if ($i % 2){ echo ' odd';} ++$i; ?>">
+			<td colspan="3" class="rt">
+				Tax: (<?php echo $this->element->getModel()->getTaxRate() * 100; ?>%)
+			</td>
+			<td class="last">
+				$<?php echo number_format($this->element->getModel()->getTaxCost(), 2); ?>
+			</td>
+		</tr>
+		
+		<tr id="total-row" class="bold<?php if ($i % 2){ echo ' odd';} ++$i; ?>">
+			<td colspan="3" class="rt">
+				Grand Total:
+			</td>
+			<td class="last">
+				$<?php echo number_format($this->element->getModel()->getTotal(), 2); ?>
+			</td>
+		</tr>
+		
+		
+
+	</tbody>
+</table>
+<div class="button-group">
+	<?php 
+	// echo $this->element->getElement('checkout');
+	echo $this->element->getElement('update');
+	echo $this->element->getElement('empty'); 
+	// echo $this->element->getElement('continue'); 
+	?>
+</div>

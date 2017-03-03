@@ -1,0 +1,63 @@
+<div id="lot-index" class="sixteen columns">
+	<h2><?php echo $this->title; ?></h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Lot</th>
+				<th>Spots</th>
+				<th>Status</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tfoot>
+			<tr>
+				<th>Lot</th>
+				<th>Spots</th>
+				<th>Status</th>
+				<th>Actions</th>
+			</tr>
+		</tfoot>
+		<tbody class="highlight">
+	<?php
+	if (!count($this->lots) > 0) :
+	?>
+	<tr>
+		<td colspan="4">
+			No Lots Created
+		</td>
+	</tr>
+	<?php
+	endif;
+	
+	foreach ($this->lots as $lot) {
+	?>
+	<tr class="<?php echo $this->cycle(array('', 'odd'))->next(); ?>">
+
+		<td>
+			<a href="<?php echo $this->url(array('controller'=>'lot', 'action'=>'view', 'id'=>$lot->id), 'default', true); ?>">
+				<?php echo $lot->name; ?>
+			</a>
+		</td>
+
+		<td>
+			<?php echo $lot->spotsum; ?>
+		</td>
+
+		<td>
+			<?php echo $lot->status ?>
+		</td>
+
+		<td class="last">
+			<a href="<?php echo $this->url(array('controller'=>'lot', 'action'=>'view', 'id'=>$lot->id), 'default', true); ?>" class="button">View</a>
+		</td>
+	</tr>
+	<?php
+	}
+	?>
+		</tbody>
+	</table>
+	<br />
+	<a href="<?php echo $this->url(array('controller' => 'lot', 'action' => 'lot-edit'), 'default') ?>" class="button">
+		Create Lot
+	</a>
+</div> <!-- end #lot-index -->

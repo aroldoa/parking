@@ -1,0 +1,52 @@
+<div class="fourteen columns offset-by-one">
+	
+	<h2><?php echo $this->title; ?></h2>
+	<div class="columns five alpha">
+		<?php echo $this->form; ?>
+	</div>
+	
+	<?php
+	if ($this->searched) :
+		if ($this->results):
+		?>
+		<div class="columns nine omega">
+		<?php 
+		if (count($this->results) > 1): 
+		// should mean we have numerous lots with results, 
+		// unless someone made duplicate spot type at a given lot
+		?>
+		<h3>Spots Found at the following locations</h3>	
+		<?php endif ?>
+
+		<?php
+		foreach ($this->results as $result) :
+		?>
+		<div id="search-result-<?php echo $result->id ?>" class="search-results">
+			<strong><?php echo $result->spot->type; ?> Parking at <?php echo $result->lot->name ?> Parking Lot</strong>
+			<br />
+			<br />
+			<strong><em>Details:</em></strong>
+			<br />
+			<?php echo $result->quantity; ?> Spot<?php if ($result->quantity != 1) echo "'s" ?> for <?php echo $result->days; ?> Days (<?php echo $result->from ?> &mdash; <?php echo $result->to; ?>)
+			
+			<br /><br />
+			<strong>Total Cost: $<?php echo $result->total; ?></strong>
+			<br />
+			<br />
+			<?php echo $this->Cart()->addForm($result); ?>
+		</div> <!-- end search-result-php -->
+		<?php
+		endforeach;
+		?>
+		</div>
+		<?php
+		else:
+		?>
+		<div>
+			Sorry, no spots of that type for those dates are available...
+		</div>
+		<?php
+		endif;
+	endif;
+	?>
+</div>

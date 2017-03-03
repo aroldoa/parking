@@ -1,0 +1,104 @@
+<div id="lot-spot" class="sixteen columns">
+	<h2>
+		<?php echo $this->title; ?>
+	</h2>
+	
+	<h3>General Information</h3>
+	<dl>
+		<dt>
+			Spot Type
+		</dt>
+		<dd>
+			<?php echo $this->spot->type; ?>
+		</dd>
+		
+		<dt>
+			Lot
+		</dt>
+		<dd>
+			<?php echo $this->spot->lot->name; ?>
+		</dd>
+
+		<dt>
+			Quantity
+		</dt>
+		<dd>
+			<?php echo $this->spot->quantity; ?>
+		</dd>
+	</dl>
+	
+	<h3>Existing Price Tiers</h3>
+	
+	<table>
+		<thead>
+			<tr>
+				<th>
+					Days
+				</th>
+				
+				<th>
+					Price
+				</th>
+				
+				<th>
+					Actions
+				</th>
+			</tr>
+		</thead>
+		<tfoot>
+				<th>
+					Days
+				</th>
+				
+				<th>
+					Price
+				</th>
+				
+				<th>
+					Actions
+				</th>
+		</tfoot>
+		<tbody>
+			<?php 
+			if (count($this->spot->priceTiers) > 0) :
+			foreach ($this->spot->priceTiers as $tier) :
+			?>
+			<tr>
+				<td>
+					<?php echo $tier->days ?>
+				</td>
+				
+				<td>
+					$<?php echo $tier->price; ?>
+				</td>
+				
+				<td class="last">
+					<a href="<?php echo $this->url(array('controller' => 'lot', 'action' => 'spot-price', 'id' => $tier->id), 'default', true) ?>" class="button">Edit</a>
+					<a href="<?php echo $this->url(array('controller' => 'lot', 'action' => 'spot-price', 'process' => 'delete', 'id' => $tier->id), 'default', true); ?>" class="button delete">Delete</a>
+				</td>
+			</tr>
+			<?php 
+			endforeach; 
+			else:
+			?>
+			<tr colspan="3">
+				<td>
+					No Price Tiers Created
+				</td>
+			</tr>
+			<?php
+			endif;
+			?>
+		</tbody>
+	</table>
+	
+	<div class="button-group">
+		<a href="<?php echo $this->url(array('controller' => 'lot', 'action' => 'spot-edit', 'id' => $this->spot->id), 'default', true) ?>" class="button">
+			Edit Spot
+		</a>
+		
+		<a href="<?php echo $this->url(array('controller' => 'lot', 'action' => 'spot-price', 'spot' => $this->spot->id), 'default', true) ?>" class="button">New Price Tier</a>
+		
+		<a href="<?php echo $this->url(array('controller' => 'lot', 'action' => 'view', 'id' => $this->spot->lot->id), 'default', true) ?>" class="button">Back</a>
+	</div> 
+</div> <!-- end lot-spot-edit -->

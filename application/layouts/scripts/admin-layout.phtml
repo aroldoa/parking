@@ -1,0 +1,51 @@
+<?php echo $this->doctype() . "\n"; ?>
+<html lang="en">
+<head>
+<?php 
+echo $this->headMeta() . "\n"; 
+echo $this->headTitle() . "\n";
+echo $this->headStyle() . "\n";
+echo $this->headLink() . "\n";
+echo $this->headScript() . "\n";
+?>
+<link rel="shortcut icon" href="/favicon.ico" />
+
+</head>
+<body id="admin">
+    <h1 class="no-display">
+        <?php echo $this->placeholder('Zend_View_Helper_HeadTitle') ?>
+    </h1>
+    <div id="wrapper">
+        
+        <div id="header">
+
+            <?php echo $this->render('_adminHeader.phtml') ?>
+
+        </div> <!-- end #header -->
+
+		<?php  
+		if ($this->identity) {
+			echo $this->render('_adminNavigation.phtml');
+			echo $this->render('_adminBreadcrumbs.phtml'); 
+		}	
+		?>
+        <div id="content">
+			
+			
+			<?php echo $this->render('_adminMessages.phtml'); ?>
+			
+            <div class="container">
+            	<?php echo $this->layout()->content; ?>
+            </div>
+            
+        </div> <!-- end #content -->
+        
+        <div id="footer">
+            
+            <?php echo $this->render('_adminFooter.phtml') ?>
+            
+        </div> <!-- end #footer -->
+        
+    </div> <!-- end #wrapper -->
+</body>
+</html>

@@ -1,0 +1,143 @@
+<div id="dates-navigation">
+	<div id="prev-month" class="month-navigation">
+		<a href="<?php echo $this->url(array(
+			'controller' => 'inventory', 
+			'action' => 'view',
+			'lot' => $this->lot->id,
+			'month' => $this->prevMonth,
+			'year' => $this->prevYear
+		), 'default', true) ?>">
+		&larr; Previous Month</a>
+	</div> <!-- end #prev-month -->
+	
+	<div id="next-month" class="month-navigation">
+		<a href="<?php echo $this->url(array(
+			'controller' => 'inventory', 
+			'action' => 'view',
+			'lot' => $this->lot->id,
+			'month' => $this->nextMonth,
+			'year' => $this->nextYear
+		), 'default', true) ?>">
+		Next Month &rarr;</a>
+	</div> <!-- end #next-month -->
+	<div id="current-month-year">
+		<?php echo date('F', mktime(0, 0, 0, $this->month, 1, $this->year)); ?> <?php echo $this->year ?>
+	</div> <!-- end #current-month-year -->
+	
+</div>
+<table id="inventory-calendar">
+	<thead>
+		<tr>
+			<th>
+				Su
+			</th>
+
+			<th>
+				Mo
+			</th>
+
+			<th>
+				Tu
+			</th>
+
+			<th>
+				We
+			</th>
+
+			<th>
+				Th
+			</th>
+
+			<th>
+				Fr
+			</th>
+
+			<th>
+				Sa
+			</th>
+		</tr>
+	</thead>
+
+	<tbody>
+	<?php
+	for ($i = 0; $i < ($this->maxDay + $this->startDay); $i++) {
+		$date = $i - $this->startDay + 1;
+		if(($i % 7) == 0 ) :
+		?>
+	    <tr>
+		<?php
+		endif;
+		if($i < $this->startDay) :
+			// blank cell
+		?>
+	    <td></td>
+		<?php
+		else:
+		?>
+		<td class="inventory-calendar-date <?php if ($i % 7 ==6) echo 'last'; ?>">
+			<div class="inventory-day">
+				<div class="calendar-date">
+					<a href="<?php echo $this->url(array(
+						'controller' => 'reservation', 
+						'action' => 'list',
+						'from' => strtotime($this->month . '/' . $date . '/' . $this->year)
+					), 'default', true); ?>">
+						<?php echo $date; ?>
+					</a>
+				</div>
+				
+				<div class="inventory-details">
+					<ul>
+					<?php foreach ($this->lot->spots as $spot) :
+					?>
+					<li>
+						<?php echo $spot->type; ?> : 
+						
+						<?php 
+						$class = 'plenty';
+						$options = array(
+							'from' => mktime(0,0,0,$this->month, $date, $this->year),
+							'to' => mktime(0,0,0,$this->month, $date + 1, $this->year)
+						);
+						
+						$remaining =  $spot->inventoryRemaining($options) ;
+						if ($remaining <= ($spot->quantity * .5)) {
+							$class = 'less-half';
+						} 
+						if ($remaining <= ($spot->quantity * .1)) {
+							$class = 'less-tenth';
+						}
+						?>
+						<span class="inventory-remaining <?php echo $class ?>">
+							<a href="<?php echo $this->url(array(
+								'controller' => 'reservation', 
+								'action' => 'list',
+								'from' => strtotime($this->month . '/' . $date . '/' . $this->year),
+								'type' => $spot->type
+							), 'default', true); ?>">
+								<?php echo $remaining ?>
+							</a>
+						</span>
+					</li>
+						
+					<?php
+					endforeach; ?>
+					</ul>
+				</div> <!-- end  -->
+				
+			</div> <!-- end  -->
+			
+		</td>
+		<?php
+		endif;
+
+		if ((($i % 7) == 6) || ($i == ($this->maxDay + $this->startDay -1))) :
+		?>
+	</tr>
+		<?php
+	endif;
+	}
+	?>
+	</tbody>
+
+</table>

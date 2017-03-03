@@ -1,0 +1,96 @@
+<div id="admin-users" class="sixteen columns">
+	<h2><?php echo $this->title; ?></h2>
+	
+	<div class="filters-box">
+		<div class="filter-handle">+ show filters</div>
+		<div class="list-filters">
+			<?php echo $this->form; ?>
+		</div> <!-- end #reservation-filters -->
+	</div>
+	<?php if ($this->users): ?>
+		<table>
+			<thead>
+				<th>
+					Name
+				</th>
+				
+				<th>
+					Role
+				</th>
+				
+				<th>
+					State
+				</th>
+				
+				<th>
+					Created
+				</th>
+			</thead>
+			
+			<tfoot>
+				<th>
+					Name
+				</th>
+				
+				<th>
+					Role
+				</th>
+				
+				<th>
+					State
+				</th>
+				
+				<th>
+					Created
+				</th>
+			</tfoot>
+			
+			<tbody class="highlight">
+				<?php 
+				if (count($this->users) > 0) : 
+				foreach ($this->users as $user): ?>
+					<tr class="<?php echo $this->cycle(array('', 'odd'))->next(); ?>">
+						<td>
+							<a href="<?php echo $this->url(array('controller'=> 'admin', 'action' => 'user-view', 'id' => $user->id), 'default', true) ?>">
+								<?php echo $user->fullname; ?>
+							</a>
+						</td>
+						
+						<td>
+							<?php echo ucfirst($user->role); ?>
+						</td>
+						
+						<td>
+							<?php echo $user->state; ?>
+						</td>
+						
+						<td class="last">
+							<?php echo $user->dateJoined; ?>
+						</td>
+					</tr>
+				<?php 
+				endforeach;
+				else:	
+				?>
+					<tr>
+						<td colspan="4">
+							No Results
+						</td>
+					</tr>
+				<?php
+				endif;
+				?>
+			</tbody>
+		</table>
+	<?php endif ?>
+	
+	<?php 
+	if($this->users instanceof Zend_Paginator): 
+	echo $this->paginationControl($this->users, 'Sliding', 'admin/_userPaginator.phtml'); 
+	endif; 
+	?>
+	
+	<div class="button-group">
+		<a href="<?php echo $this->url(array('controller' => 'admin', 'action' => 'user-edit'), 'default', true) ?>" class="button">Add User</a>
+	</div>
+</div> <!-- end #admin-users -->

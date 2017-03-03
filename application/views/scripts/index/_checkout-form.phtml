@@ -1,0 +1,30 @@
+<?php
+// echo $this->element->getDescription();
+echo $this->element->getDisplayGroup('person-info');
+echo $this->element->getDisplayGroup('address-info');
+echo $this->element->getDisplayGroup('payment-info');
+?>
+<div class="clear"></div>
+
+<?php 
+if ($this->element->getElement('confirm')) :
+?>
+<div id="checkout-terms">
+	<h4>Terms and Conditions</h4>
+	
+	<div class="smaller padded">
+		<?php echo $this->SiteSettings()->policy; ?>
+	</div>
+	<?php 
+	echo $this->element->getElement('confirm');
+?>
+</div>
+<?php
+endif;
+?>
+<?php
+echo $this->element->getElement('submit'); 
+?>
+<div id="please-wait" style="display:none;">
+	Please Wait While we process your transaction.....
+</div> 

@@ -1,0 +1,16 @@
+<?php
+if ($this->breadcrumbs) {
+$trail = $this->Breadcrumb($this->breadcrumbs->getTrail(), 25, ' &raquo; ');
+if ($trail) :
+?>
+<div id="breadcrumbs">
+	<div class="container">
+		<div class="sixteen columns">
+			<?php echo $trail;?>
+		</div> 
+	</div> 
+</div> <!-- end #breadcrumbs -->
+<?php
+endif;
+}
+?>

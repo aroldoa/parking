@@ -1,0 +1,87 @@
+<div id="ship-ship" class="sixteen columns">
+	<h2><?php echo $this->title; ?></h2>
+	<?php
+
+	if (count($this->ship->cruises) > 0) :
+	?>
+	<div class="filters-box">
+		<div class="filter-handle">+ Show Filters</div>
+		<div class="list-filters">
+			<?php echo $this->form; ?>
+		</div> <!-- end #reservation-filters -->
+	</div>
+	<table>
+		<thead>
+			<tr>
+				<th>
+					Cruise Date
+				</th>
+
+				<th>
+					Days
+				</th>
+			</tr>
+		</thead>
+		<tfoot>
+			<tr>
+				<th>
+					Cruise Date
+				</th>
+
+				<th>
+					Days
+				</th>
+			</tr>
+		</tfoot>
+		<tbody class="highlight">
+		<?php
+		if (count($this->cruises) > 0) : 
+		foreach ($this->cruises as $cruise) :
+		?>
+			<tr class="<?php echo $this->cycle(array('', 'odd'))->next(); ?>">
+				<td>
+					<a href="<?php echo $this->url(array('controller'=>'ship','action'=>'cruise-edit','id'=>$cruise->id)) ?>">
+						<?php echo $cruise->sailDate; ?>
+					</a>
+				</td>
+
+				<td class="last">
+					<?php echo $cruise->days; ?>
+				</td>
+			</tr>
+		<?php
+		endforeach;
+		else:
+		?>
+		<tr>
+			<td colspan="2">
+				No Results
+			</td>
+		</tr>
+		<?php
+		endif;
+		?>
+		</tbody>
+	</table>
+	<?php
+	endif;
+	?>
+	<?php 
+	if($this->cruises instanceof Zend_Paginator): 
+	echo $this->paginationControl($this->cruises, 'Sliding', 'ship/_paginator.phtml'); 
+	endif; 
+	?>
+	<div class="button-group">
+		<a href="<?php echo $this->url(array('controller'=>'ship', 'action'=>'ship-edit', 'id'=>$this->ship->id)) ?>" class="button">
+			Edit Ship
+		</a>
+
+		<a href="<?php echo $this->url(array('controller'=>'ship', 'action'=>'cruise-edit','ship'=>$this->ship->id), 'default', true) ?>" class="button">
+			Add Cruise
+		</a>
+
+		<a href="<?php echo $this->url(array('controller'=>'ship'), 'default', true) ?>" class="button">
+			Back
+		</a>
+	</div>
+</div> <!-- end #ship-ship -->

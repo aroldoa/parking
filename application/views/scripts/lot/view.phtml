@@ -1,0 +1,60 @@
+<div id="lot-view" class="sixteen columns">
+	<h2>
+		<?php echo $this->title; ?>
+	</h2>
+	
+	<?php
+	if (count($this->lot->spots) > 0) :
+	?>
+	<h3>Lot Inventory</h3>
+	<table id="lot-table">
+		<thead>
+			<tr>
+				<th>Type</th>
+				<th>Quantity</th>
+				<th>Price Tiers</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody class="highlight">
+	<?php
+	$totalSum = '';
+	$totalSpots = '';
+	foreach ($this->lot->spots as $spot) :
+		$totalSum += $spot->price * $spot->quantity;
+		$totalSpots += $spot->quantity;
+	?>
+	<tr class="<?php echo $this->cycle(array('', 'odd'))->next(); ?>">
+		<td><?php echo $spot->type ?></td>
+	
+		<td><?php echo $spot->quantity ?></td>
+		
+		<td><?php echo count($spot->priceTiers) ?></td>
+	
+		<td class="last">
+			<a href="<?php echo $this->url(array('controller'=>'lot', 'action'=>'spot', 'id'=> $spot->id), 'default', true) ?>" class="button">View</a>
+			<a href="<?php echo $this->url(array('controller'=>'lot', 'action'=>'spot-edit', 'id'=> $spot->id), 'default', true) ?>" class="button">Edit</a>
+		</td>
+	</tr>
+	<?php
+	endforeach;
+	?>
+		</tbody>
+		<tfoot>
+			<tr>
+				<th></th>
+				<th><?php echo $this->lot->spotsum ?> total spots</th>
+				<th></th>
+				<th></th>
+			</tr>
+		</tfoot>
+	</table>
+	<?php
+	endif;
+	?>
+	<div class="button-group">
+		<a href="<?php echo $this->url(array('controller'=>'lot', 'action'=>'lot-edit', 'id'=> $this->lot->id), 'default', true) ?>" class="button">Edit Lot</a> 
+		<a href="<?php echo $this->url(array('controller'=>'lot', 'action'=>'spot-edit', 'lot' => $this->lot->id), 'default', true) ?>" class="button">Create New Spot</a>
+	</div>
+	
+</div>

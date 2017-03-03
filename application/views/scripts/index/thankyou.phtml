@@ -1,0 +1,67 @@
+<div id="thankyou" class="sixteen columns">
+	<h2>
+		Thank you <?php echo $this->transaction->user->fullname; ?>.
+	</h2>
+	
+	<div class="six columns alpha">
+		<img src="/images/CarnivalShip.jpg" alt="Carnival Triumph" />
+	</div>
+	
+	<div class="ten columns omega">
+		<p>
+			Your reservation details are as follows:
+		</p>
+	
+		<table>
+			<thead>
+				<tr>
+					<th>
+						Spot Type
+					</th>
+					
+					<th>
+						Location
+					</th>
+					
+					<th>
+						Cruise
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($this->transaction->reservations as $reservation): ?>
+			    	<tr>
+						<td>
+							<?php echo $reservation->type; ?>
+						</td>
+						
+						<td>
+							<a href="<?php echo $reservation->lot->googleMapUrl; ?>" target="_blank">
+								<?php echo $reservation->lot->name; ?>
+							</a>
+						</td>
+						
+						<td class="last">
+							<?php echo $reservation->cruise->ship->name; ?>: <?php echo $reservation->cruise->sailDate; ?>
+						</td>
+			    		
+
+			    	</tr>
+
+			    <?php endforeach ?>
+			</tbody>
+		</table>
+		
+		<br />
+		
+		<p>
+			Your Transaction Id # is: <strong><?php echo $this->transaction->transaction_id; ?></strong>
+		</p>
+	
+		<p>
+			You should receive an email confirmation as well as a receipt of your transaction. If you have any questions please use the contact information on the main website to get in touch with us.
+		</p>
+	</div> 
+	
+	
+</div>

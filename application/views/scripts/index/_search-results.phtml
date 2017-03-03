@@ -1,0 +1,44 @@
+<div id="results-container">
+<?php
+if ($this->results):
+?>
+	<h3>Search Results</h3>
+<?php 
+if (count($this->results) > 1): 
+	
+// should mean we have numerous lots with results, 
+// unless someone made duplicate spot type at a given lot
+?>
+<h4>Spots Found at the following locations</h4>
+<?php endif; ?>
+
+<?php
+foreach ($this->results as $result) :
+?>
+<div id="search-result-<?php echo $result->id ?>" class="search-results">
+	<blockquote>
+		<h4><?php echo $result->spot->type; ?> Parking at <?php echo $result->lot->name ?></h4>
+		
+		<div>
+			<?php echo $result->quantity; ?> <?php echo $result->spot->type; ?> Parking Spot<?php if ($result->quantity != 1) echo "'s" ?> for <?php echo $result->cruise->ship->name ?> <?php echo $result->cruise->sailDate ?> (<?php echo $result->days; ?> Days)
+			
+		</div>
+
+		<strong>Total Cost: $<?php echo $result->total; ?></strong>
+		<div class="button-group">
+			<?php echo $this->Cart()->addForm($result); ?>
+		</div>
+	</blockquote>
+</div>
+<?php
+endforeach;
+
+else:
+?>
+<div>
+	Sorry, we could not find the results you where looking for&hellip;
+</div>
+<?php
+endif; // end $results
+?>
+</div> <!-- end search-result-php -->

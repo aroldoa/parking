@@ -1,0 +1,17 @@
+<div id="admin-export" class="sixteen columns">
+	<h2>Export Site Data (<?php echo $this->dataType; ?>)</h2>
+</div> <!-- end #admin-export -->
+<div id="dashboard">
+	<?php
+		$totalPages = ceil($this->totalRecords/$this->recordPerPage);
+		for($i = 1; $i <= $totalPages; $i++) {
+		?>
+		<div class="eight columns">
+			<a href="<?php echo $this->url(array('controller'=>'admin', 'action' => 'get-csv', 'data' => $this->dataType), 'default', true) ?>?page=<?php echo $i; ?>" class="button">
+				Page # <?php echo $i; ?>
+			</a>
+		</div>
+		<?php
+		}
+	?>
+</div> <!-- end #dashboard -->

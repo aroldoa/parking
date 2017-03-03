@@ -1,0 +1,114 @@
+Controllers
+	Reservations
+		select
+			ship (or date to from), date, type, quantity
+		Add to cart / checkout
+	Admin
+		Inventory
+			add/create
+			modify/edit
+			delete
+			status
+			?Lots?
+		Reporting
+			sales
+			inventory
+		Export
+			Users
+			Reservations
+			Inventory
+		Coupons
+	Cart
+		add
+		view
+		checkout
+			Customer/billing info
+			promotion/coupon id
+			card info
+			terms agreement
+		?refunds?
+	Account
+		login
+		logout
+		register
+		reset
+		history
+		settings
+		resrevations
+		
+Models
+	Site
+		title
+		email
+	Users
+		id
+		first
+		last
+		email
+		phone
+		address
+		city
+		state
+		zip
+		ip
+		last
+		registered
+		password
+	Lots
+		id
+		name
+		address
+		city
+		state
+		zip
+		description
+	Spots
+		id
+		lot
+		type
+		quantity
+		price
+		description
+	Reservations
+		id
+		user
+		type
+		quantity
+		from
+		to
+	Sales/Transactions
+		transaction_id
+		ts_created
+		auth_code
+		description
+		amount
+		first
+		last
+		address
+		city
+		state
+		zip
+		country
+		phone
+		email
+		md5_hash
+		account_number
+		card_type
+	Coupons
+		id
+		title
+		type (fixed/%)
+		amount
+		code
+		description
+	Ship
+		id
+		name
+		status
+	Cruise
+		id
+		Ship
+		date
+		days
+
+Forms

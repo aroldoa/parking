@@ -1,0 +1,44 @@
+<div id="index" class="sixteen columns">
+	<h2><?php echo $this->title; ?></h2>
+	<a name="search"></a>
+	<?php 
+	echo $this->searchForm; 
+	
+	if ($this->searched) :
+	echo $this->render('index/_search-results.phtml');
+	endif; // end if searched
+	
+	if (!$this->cartModel->isEmpty()) :
+	?>
+	<div id="cart">
+		<?php echo $this->Cart()->cartTable(); ?>
+	</div> <!-- end #cart -->
+	<div id="checkout-container">
+		<?php
+		if ($this->error) :
+		?>
+		<div id="messages" class="error">
+			<?php echo $this->error; ?>
+		</div> <!-- end #messages -->
+		<?php
+		endif;
+		echo $this->checkoutForm;
+		?>
+	</div>
+	<?php
+	else:
+	?>
+	<div id="main-banner" class="">
+		<?php if ($this->images):
+			$index = rand(0, count($this->images) - 1);
+		?>
+			<img src="<?php echo $this->images[$index]['url']; ?>" alt="<?php echo $this->images[$index]['filename']; ?>" />
+		<?php 
+		endif; 
+		?>
+	</div> 
+	<?php
+	endif;
+	?>
+	
+</div>

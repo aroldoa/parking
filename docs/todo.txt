@@ -1,0 +1,63 @@
+6011000000000012
+--------------------------------------------------------------------------------
+1-started 2-refine 3-complete 4-disregard
+--------------------------------------------------------------------------------
+Todo:
+
+2-Develop spot reservation system
+	Need to Refine Admin side 
+		Transaction type and status db columns 
+3-Incorporate shopping cart
+3-Incorporate user registration/login into checkout
+	user will not have login ability as per original RFP
+3-Work out Auth.net transactions
+3-improve redirects in admin
+3-checkout should not be able to edit cart, make redirect for edit
+3-make lot delete remove children
+
+4-work out domain/lot relationships
+	Functional as is
+4-google map integration (or image)
+	Might look into later or leave to WP site
+
+
+Admin
+	Login
+	Inventory Calendar
+	Data Exporter
+
+
+Reservation System
+	Search
+	Persist
+		Cart model
+	Purchase
+		Ties into registration system
+	
+User System
+	Register
+		As part of checkout process
+	Login
+		password reset
+	Manage
+		account info
+		reservations
+	
+Management System
+	Inventory
+	Ships/Dates
+	Reservations
+	Users
+	
+Reporting System
+	Export
+	Tables
+	
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+Completed:
+Develop lot manager
+	DB Schema
+	Models
+	Controllers
+	Forms

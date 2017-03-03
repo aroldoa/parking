@@ -1,0 +1,39 @@
+<div id="admin-navigation">
+	<ul class="h-nav container">
+	    <li>
+	    	<a href="<?php echo $this->url(array('controller' => 'admin', 'action' => 'index'), 'default', true) ?>">
+	    		Dashboard
+	    	</a>
+	    </li>
+	
+		<li>
+	    	<a href="<?php echo $this->url(array('controller' => 'reservation', 'action' => 'list'), 'default', true) ?>">
+	    		Reservations
+	    	</a>
+	    </li>
+	
+		<li>
+	    	<a href="<?php echo $this->url(array('controller' => 'inventory'), 'default', true) ?>">
+	    		Inventory Calendar
+	    	</a>
+	    </li>
+	
+		<li>
+	    	<a href="<?php echo $this->url(array('controller' => 'admin', 'action' => 'users'), 'default', true) ?>">
+	    		Users
+	    	</a>
+	    </li>
+	
+		<li>
+	    	<a href="<?php echo $this->url(array('controller' => 'admin', 'action' => 'settings'), 'default', true) ?>">
+	    		Settings
+	    	</a>
+	    </li>
+	
+		<li>
+	    	<a href="<?php echo $this->url(array('controller' => 'admin', 'action' => 'logout'), 'default', true) ?>">
+	    		Logout
+	    	</a>
+	    </li>
+	</ul>
+</div> <!-- end #admin-navigation -->

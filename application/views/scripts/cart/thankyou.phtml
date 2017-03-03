@@ -1,0 +1,33 @@
+<div class="twelve columns offset-by-two">
+	<h2>
+		Thank you <?php echo $this->transaction->user->fullname; ?>.
+	</h2>
+	
+	<br />
+	
+	<div>
+		<p>
+			Your reservation details are as follows:
+		</p>
+	
+		<ul>
+		    <?php foreach ($this->transaction->reservations as $reservation): ?>
+		    	<li>
+		    		<?php echo $reservation->quantity ?> <?php echo $reservation->type ?> Parking Spot<?php if ($reservation->quantity != 1) echo "'s" ?> at <?php echo $reservation->lot->name ?> begining <?php echo $reservation->fromDate ?> for <?php echo $reservation->days ?>.
+				
+		    	</li>
+			
+		    <?php endforeach ?>
+		</ul>
+		
+		<br />
+		
+		<p>
+			Your Transaction Id # is: <strong><?php echo $this->transaction->transaction_id; ?></strong>
+		</p>
+	
+		<p>
+			You should receive an email confirmation as well as a receipt of your transaction. If you have any questions please use the contact information on the main website to get in touch with us.
+		</p>
+	</div> 
+</div>

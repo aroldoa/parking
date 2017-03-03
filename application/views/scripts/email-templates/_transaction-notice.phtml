@@ -1,0 +1,60 @@
+Website Transaction Notice
+
+<h1>A Reservation was just created!</h1>
+
+<div>
+
+	<?php foreach ($this->data['transaction']->reservations as $reservation): ?>
+	<div style="margin : 10px 0;">
+		<strong>Reservation Information</strong>
+		<dl>
+			<dt>
+				<strong>Cruise Ship/Date</strong>
+			</dt>
+			
+			<dd>
+				<?php echo $reservation->cruise->ship->name ?> on <?php echo $reservation->fromDate; ?>
+			</dd>
+			
+			<dt>
+				<strong>Lot</strong>
+			</dt>
+			
+			<dd>
+				<?php echo $reservation->lot->name ?>
+			</dd>
+			
+			<dt>
+				<strong>Spot Type/Quantity</strong>
+			</dt>
+			
+			<dd>
+				<?php echo $reservation->quantity ?> <?php echo $reservation->type ?> Spots
+			</dd>
+		</dl>
+	</div> 
+	<?php endforeach ?>
+	
+	<br />
+	
+	<strong>User Information</strong>
+	<div>
+		<dl>
+			<dt>
+				<strong>Name</strong>
+			</dt>
+			
+			<dd>
+				<?php echo $this->data['user']->fullname; ?>
+			</dd>
+			
+			<dt>
+				<strong>Authorize.net Transaction Id:</strong>
+			</dt>
+			
+			<dd>
+				<?php echo $this->data['transaction']->transaction_id; ?>
+			</dd>
+		</dl>
+	</div>
+</div>

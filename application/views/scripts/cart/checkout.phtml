@@ -1,0 +1,23 @@
+<div class="twelve columns offset-by-two">
+	<h2>Checkout</h2>
+	<?php
+	if ($this->cartModel->isEmpty()) :
+	?>
+	<p>There are no items in your cart.</p>
+	<?php
+	else:
+	echo $this->Cart()->checkoutTable();
+	endif;
+	?>
+	<hr />
+	<?php
+	if ($this->error) :
+	?>
+	<div class="error">
+		<?php echo $this->error; ?>
+	</div>
+	<?php
+	endif;
+	echo $this->form;
+	?>
+</div>
