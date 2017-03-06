@@ -54,7 +54,7 @@ class Form_Cart_Authorizenet_Checkout extends My_Form_Abstract
 			'required' => true,
 			'filters' => array('StringTrim'),
 			'validators' => array(
-				array('Regex', false, array('/^[a-zA-Z0-9\.\,\-\_\ ]+$/i'))
+				array('Regex', false, array('/^[a-zA-Z0-9\.\,\-\_\'\ ]+$/i'))
 			),
 			'errorMessages' => array('Please enter your address')
 		));

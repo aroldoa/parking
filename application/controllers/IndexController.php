@@ -5,13 +5,13 @@ class IndexController extends My_Controller_Action
 	protected $_form;
 	protected $_models = array();
 	protected $_ship;
-	
+
     public function init()
     {
         parent::init();
 		$this->_helper->layout()->setLayout('lighthouse');
 		$this->view->headLink()->appendStylesheet('/css/sitestyles.css');
-		
+
 		// Zend_Session::namespaceUnset('Model_Cart');
 		// Zend_Session::namespaceUnset('SearchResults');
     }
@@ -25,42 +25,42 @@ class IndexController extends My_Controller_Action
 				exit;
 			}
 		}
-		
+
 		// $this->getModel('cart')->emptyCart();
 		$request = $this->getRequest();
 		// $form = new Form_Search();
 		$form = $this->getModel('cart')->getForm('search');
 		$form->setAction('/');
 		$this->customLinks();
-		
+
 		$checkoutForm = $this->getModel('cart')->getForm('cartAuthorizenet_Checkout');
-		
+
 		if ($this->getModel('cart')->isEmpty()) {
 			$checkoutForm->removeElement('submit');
 			$checkoutForm->removeElement('confirm');
 		}
-		
+
 		if ($request->isPost()) {
 			// set flags
 			$cart = false;
 			$process = false;
-			
+
 			$ship = $this->getModel('ship')->getRowById($this->_getParam('ship', null));
-			
+
 			if (null !== $ship) {
 				$this->_ship = $ship;
 				$form->setCruiseDateOptions($ship);
 			}
-			
+
 			$cruise = $this->getModel('cruise')->getRowById($this->_getParam('cruise', null));
-			
+
 			if (null !== $cruise && $ship) {
 				$form->setTypeOptions();
 			}
-			
+
 			// spot type selection
 			$type = $this->_getParam('type', null);
-			
+
 			if ($type != '' && $cruise && $ship) {
 				$form->getElement('type')->setValue($type);
 				$options = array(
@@ -68,65 +68,64 @@ class IndexController extends My_Controller_Action
 					'to' => (int)$cruise->return,
 					'type' => $type,
 				);
-				
+
 				if ($ship->lot && $ship->lot > 0) {
 					$options['lot'] = $ship->lot;
 				}
 
 				$spotModel = $this->getModel('Spot');
 				$spots = $spotModel->getSpots($options);
-				
+
 				$remaining = 0;
-				
+
 				foreach ($spots as $spot) {
 					$inStock = $spot->inventoryRemaining($options);
-					
+
 					if (!$inStock > 0) {
 						continue;
 					}
-					
+
 					$remaining = $inStock;
 				}
-				
+
 				$form->setQuantityOptions($remaining);
 			}
-			
+
 			$quantity = $this->_getParam('quantity', null);
-			
+
 			if ($quantity > 0 && $type != '' && $cruise && $ship) {
-				
+
 				$this->view->searched = true;
 				$results = $this->getModel('Reservation')->checkAvailabilityByCruise($cruise, $type, $quantity);
-				
+
 				if ($results) {
 					$this->view->results = $results;
 					$this->getSession('SearchResults')->results = $results;
 				}
 			}
-			
+
 			$form->populate($request->getPost());
 			$checkoutForm->populate($request->getPost());
-			
+
 			if ($checkoutForm->getElement('submit')) {
-				
+
 				if ($checkoutForm->getElement('submit')->isChecked()) {
-					
+
 					if ($checkoutForm->isValid($request->getPost())) {
-						
-						// make sure conditions agreed to 
+
+						// make sure conditions agreed to
 						if (true == $checkoutForm->getValue('confirm')) {
-							
+
 							// grab the cleaned values from the form
 							$formValues = $checkoutForm->getValues();
 							// remove the confirmation field from transaction
 							unset($formValues['confirm']);
-							
+
 							// load or create user from form info
 							$user = $this->getModel('user')->getUserByEmail($formValues['email']);
 
 							// create user if not already in database
 							if (null === $user) {
-								
 								// if user is new, save and load
 								$id = $this->getModel('user')->saveUser($formValues);
 								$user = $this->getModel('user')->getUserById($id);
@@ -135,7 +134,7 @@ class IndexController extends My_Controller_Action
 							// check that all cart items are still still available
 							$taken = array();
 							foreach ($this->getModel('cart') as $item) {
-								
+
 								// check the availability of spots
 								if (!$this->getModel('Reservation')->checkAvailabilityByCruise($item->cruise, $item->spot->type, $item->quantity)) {
 									$taken[] = $item;
@@ -169,7 +168,7 @@ class IndexController extends My_Controller_Action
 
 									// save each cart item (spot) to the reservations table
 									foreach ($this->getModel('cart') as $item) {
-										
+
 										if (!$this->getModel('reservation')->saveReservation($item, $user, $transaction)) {
 											throw new Exception('Error Saving Reservation after payment processed for txn id: '. $transacton->transaction_id);
 										}
@@ -184,7 +183,7 @@ class IndexController extends My_Controller_Action
 										$this->sendConfirmation($user, $transaction, '_transaction-notice.phtml', true);
 									}
 									// $this->sendConfirmation($user, $transaction, '_reservation-confirmation.phtml');
-									
+
 
 									// redirect to thank you page as we are all done here
 									$this->_redirect($this->getUrl('thankyou', 'index'));
@@ -201,13 +200,13 @@ class IndexController extends My_Controller_Action
 								$this->view->error = $reason;
 							}
 						}
-						
+
 					}
 				}
 			}
-			
+
 		}
-		
+
 		$this->view->assign(array(
 			'searchForm' => $form,
 			'checkoutForm' => $checkoutForm,
@@ -224,66 +223,66 @@ class IndexController extends My_Controller_Action
 			'cartModel' => $this->getModel('cart')
 		));
 	}
-	
+
 	public function addAction()
 	{
 		$request = $this->getRequest();
-		
+
 		$id = $this->_getParam('id', null);
-		
+
 		if (null !== $id) {
 			$reservation = $this->getSession('SearchResults')->results[$id];
-			
+
 			// check the availability of spots
 			if ($this->getModel('Reservation')->checkAvailabilityByCruise($reservation->cruise, $reservation->spot->type, $reservation->quantity)) {
-				
+
 				$this->getModel('cart')->addItem($reservation, $reservation->quantity);
 			}
-			
+
 		}
-		
+
 		$this->redirect(null, 'index');
 	}
-	
+
 	public function updateAction()
 	{
 		$this->_helper->viewRenderer->setNoRender();
 		$request = $this->getRequest();
-		
+
 		// look for special button submissions
 		if ($request->getPost('checkout')) {
-			
+
 			$this->redirect(null, 'index');
-			
+
 		} else if ($request->getPost('continue')) {
-			
+
 			$this->redirect(null, 'index');
-			
+
 		} else if ($request->getPost('empty')) {
-			
+
 			$this->getModel('cart')->deleteAll();
-			
+
 		} else if ($request->getPost('update')) {
-			
+
 			foreach ($this->_getParam('quantity') as $id => $qty) {
-				
+
 				$item = $this->getModel('cart')->offsetGet($id);
-				
+
 				if (null !== $item) {
-					
+
 					// check the availability of spots
 					if ($this->getModel('Reservation')->checkAvailabilityByCruise($item->cruise, $item->spot->type, $qty, $item->quantity)) {
-						
+
 						$this->getModel('cart')->addItem($item, $qty);
 					}
 
 				}
 			}
-			
+
 		} else if ($request->getPost('applycoupon')) {
-			
+
 			$coupon = $this->getModel('coupon')->getCouponByCouponCode($this->_getParam('coupon', null));
-			
+
 			if (null !== $coupon) {
 				$subtotal = $this->getModel('cart')->getSubTotal();
 
@@ -294,10 +293,10 @@ class IndexController extends My_Controller_Action
 
 				}
 			}
-			
-			
+
+
 		}
-		
+
 		$this->redirect(null, 'index');
 	}
 
@@ -306,22 +305,22 @@ class IndexController extends My_Controller_Action
 		if (null === $template) {
 			$template = '_reservation-confirmation.phtml';
 		}
-		
+
 		$data = array(
 			'user' => $user,
 			'transaction' => $transaction,
 			'siteSettings' => $this->getModel('siteSettings')
 		);
-		
+
 		$emailService = new Service_SendEmail();
-		
+
 		if ($toAdmin) {
 			$emailService->setToAdmin();
 		}
-		
+
 		return $emailService->process($data, $template);
 	}
-	
+
 	public function thankyouAction()
 	{
 		$transactionId = $this->getSession(__CLASS__)->transactionId;
@@ -336,11 +335,11 @@ class IndexController extends My_Controller_Action
 		// Spot to develop the calendar and return via an ajax request.
 		$request = $this->getRequest();
 		$shipModel = $this->getModel('ship');
-		
+
 		$ship = $shipModel->getRowById($this->_getParam('ship', 1));
-		
+
 		$cruises = $ship->getCruises();
-		
+
 		$cruiseArray = array();
 		foreach ($cruises as $cruise) {
 			$date = date('m/d/y', $cruise->date);
@@ -350,7 +349,7 @@ class IndexController extends My_Controller_Action
 		// get cal params
 		$year = $this->_getParam('year', date('Y'));
 		$month = $this->_getParam('month', date('n'));
-		
+
 		$cYear = $year;
 		$cMonth = $month;
 
@@ -367,22 +366,22 @@ class IndexController extends My_Controller_Action
 		    $next_month = 1;
 		    $next_year = $cYear + 1;
 		}
-		
+
 		$this->view->assign(array(
 			'cYear' => $cYear,
 			'cMonth' => $cMonth,
 			'cruises' => $cruiseArray
 		));
-		
+
 	}
-	
+
 	public function getIndexImages()
 	{
 		$root = $_SERVER['DOCUMENT_ROOT'];
 		$imgFolder = '/images/homepage/';
-		
+
 		$dir = $root . $imgFolder;
-		
+
 		$imgs = array();
 		// Open directory, and read its contents
 		if (is_dir($dir)) {
@@ -406,13 +405,13 @@ class IndexController extends My_Controller_Action
 								);
 							}
 						}
-						
+
 					}
 		        }
 		        closedir($dh);
 		    }
 		}
-		
+
 		if (count($imgs) == 0) {
 			// get default (lot) images
 			$imgs[] = array(
@@ -420,7 +419,7 @@ class IndexController extends My_Controller_Action
 				'url' => $imgFolder . 'Default.png'
 			);
 		}
-		
+
 		return $imgs;
 	}
 
@@ -431,6 +430,6 @@ class IndexController extends My_Controller_Action
 		// $this->view->headScript()->appendFile('/js/calendar.js', 'text/javascript');
 		$this->view->headLink()->appendStylesheet('/css/jquery-ui-custom-theme/jquery-ui-1.8.23.custom.css');
 	}
-	
+
 }
 
