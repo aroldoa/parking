@@ -143,6 +143,9 @@ class IndexController extends My_Controller_Action
 
 							// if all items in cart are still available, continue process
 							if (count($taken) == 0) {
+								$formValues['exp_date'] = $formValues['exp_month'].'/'.date('y',strtotime($formValues['exp_year'].date('-m-d H:i:s')));
+								unset($formValues['exp_month']);
+								unset($formValues['exp_year']);
 
 								// set up our transaction service class
 								$transactionService = new Service_AuthorizeNet($this->getModel('siteSettings')->getSettings());

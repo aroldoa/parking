@@ -111,14 +111,40 @@ class Form_Cart_Authorizenet_Checkout extends My_Form_Abstract
 			'errorMessages' => array('Please enter your credit card number')
 		));
 
-		$this->addElement('text', 'exp_date', array(
-			'label' => 'Exp. (MM/YY)',
-			'required' => true,
-			'validators' => array(
-				array('Regex', false, array('/^\d\d\/\d\d$/i'))
-			),
-			'errorMessages' => array('Please enter expiration in format "mm/yy"'),
-		));
+		$months = array();
+		for ($i = 1; $i < 13; $i++)
+		{
+			if ($i < 10)
+				$months['0'.$i] = '0'.$i;
+			else
+				$months[$i] = $i;
+		}
+
+		$expMonth = new Zend_Form_Element_Select('exp_month');
+		$expMonth->setLabel('Exp:')
+			->addMultiOptions($months)
+			->setAttrib('style', 'width: 20%; display: inline !important')
+			->setDescription('/');
+
+		$this->addElement($expMonth);
+
+		// Generate the Expiry Year options
+		$years = array();
+		$thisYear = date('y');
+
+		for ($i = 0; $i < 10; ++$i)
+		{
+			$val = $thisYear + $i;
+			$years[$val] = $val;
+		}
+
+		// The Expiry Year field
+		$expYear = new Zend_Form_Element_Select('exp_year');
+		$expYear->addMultiOptions($years)
+			->setAttrib('style', 'width: 30%; display: inline !important')
+			->setDescription(' (Month / Year)');
+
+		$this->addElement($expYear);
 
 		$this->addElement('text', 'card_code', array(
 			'label' => 'Security Code',
@@ -168,7 +194,7 @@ class Form_Cart_Authorizenet_Checkout extends My_Form_Abstract
 		);
 
 		$this->addDisplayGroup(
-			array('card_num', 'exp_date', 'card_code'),
+			array('card_num', 'exp_month','exp_year', 'card_code'),
 			'payment-info',
 			array(
 				// 'legend' => 'Account Settings',
@@ -196,5 +222,19 @@ class Form_Cart_Authorizenet_Checkout extends My_Form_Abstract
 		));
 
 		$this->setCustomDecorators();
+
+		$expMonth->setDecorators(array(
+			'ViewHelper',
+			array(array('data' => 'HtmlTag'), array('tag' => 'div', 'id' => 'card-expire',
+				'openOnly' => true)),
+			array('Description', array('tag' => 'span', 'class' => 'seperator')),
+			array('Label', array('tag' => 'div'))
+		));
+
+		$expYear->setDecorators(array(
+			'ViewHelper',
+			array('Description', array('tag' => 'small', 'class' => 'greyout')),
+			array(array('row' => 'HtmlTag'), array('tag' => 'div', 'closeOnly' => true))
+		));
 	}
 }
