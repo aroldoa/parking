@@ -130,7 +130,7 @@ class Form_Cart_Authorizenet_Checkout extends My_Form_Abstract
 
 		// Generate the Expiry Year options
 		$years = array();
-		$thisYear = date('y');
+		$thisYear = date('Y');
 
 		for ($i = 0; $i < 10; ++$i)
 		{

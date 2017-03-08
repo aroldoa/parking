@@ -1,3 +1,12 @@
+<style>
+	.note {
+		font-size: 12px;
+		display: none;
+		color: red;
+		width: 33%;
+		float: right;
+	}
+</style>
 <h4>Your Cart</h4>
 <table id="cart-table">
 	<thead>
@@ -5,15 +14,15 @@
 			<th>
 				Spot Information
 			</th>
-			
+
 			<th>
 				Days
 			</th>
-			
+
 			<th>
 				Spots
 			</th>
-			
+
 			<th>
 				Line Total
 			</th>
@@ -26,7 +35,7 @@
 		?>
 		<tr <?php if ($i % 2){ echo 'class="odd"';}; ?>>
 			<td>
-				"<?php echo $item->spot->type; ?>" Parking at "<?php echo $item->lot->name ?>" 
+				"<?php echo $item->spot->type; ?>" Parking at "<?php echo $item->lot->name ?>"
 				<br />
 				Cruising <?php echo $item->cruise->ship->name; ?> on <?php echo $item->from ?>
 			</td>
@@ -44,7 +53,7 @@
 		<?php
 		++$i;
 		endforeach;
-		
+
 		// coupon/discount row
 		?>
 		<tr class="<?php if ($i % 2){ echo ' odd';} ++$i; ?>">
@@ -61,13 +70,13 @@
 				Apply Discount
 			</td>
 			<td class="coupon bold last" colspan="3">
-				<?php echo $this->element->coupon->getElement('coupon');
-				echo $this->element->coupon->getElement('applycoupon'); ?>
+				<?php echo $this->element->coupon->getElement('coupon'); ?>
+				<?php echo $this->element->coupon->getElement('applycoupon'); ?>
 			</td>
-		
+
 		<?php endif; ?>
 		</tr>
-		
+
 		<tr id="tax-row" class="<?php if ($i % 2){ echo ' odd';} ++$i; ?>">
 			<td colspan="3" class="rt">
 				Sub-Total
@@ -76,7 +85,7 @@
 				$<?php echo number_format($this->element->getModel()->getSubTotal(), 2); ?>
 			</td>
 		</tr>
-		
+
 		<tr id="tax-row" class="<?php if ($i % 2){ echo ' odd';} ++$i; ?>">
 			<td colspan="3" class="rt">
 				Tax: (<?php echo $this->element->getModel()->getTaxRate() * 100; ?>%)
@@ -85,7 +94,7 @@
 				$<?php echo number_format($this->element->getModel()->getTaxCost(), 2); ?>
 			</td>
 		</tr>
-		
+
 		<tr id="total-row" class="bold<?php if ($i % 2){ echo ' odd';} ++$i; ?>">
 			<td colspan="3" class="rt">
 				Grand Total:
@@ -94,16 +103,23 @@
 				$<?php echo number_format($this->element->getModel()->getTotal(), 2); ?>
 			</td>
 		</tr>
-		
-		
+
+
 
 	</tbody>
 </table>
 <div class="button-group">
-	<?php 
+	<?php
 	// echo $this->element->getElement('checkout');
 	echo $this->element->getElement('update');
-	echo $this->element->getElement('empty'); 
-	// echo $this->element->getElement('continue'); 
+	echo $this->element->getElement('empty');
+	// echo $this->element->getElement('continue');
 	?>
 </div>
+<script>
+$(document).ready(function() {
+    $('#coupon').bind('input', function() {
+      $('.note').css('display','flex');
+    });
+	});
+</script>
