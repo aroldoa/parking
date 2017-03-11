@@ -5,15 +5,16 @@ class IndexController extends My_Controller_Action
 	protected $_form;
 	protected $_models = array();
 	protected $_ship;
+	protected $_message;
 
     public function init()
     {
-        parent::init();
-		$this->_helper->layout()->setLayout('lighthouse');
-		$this->view->headLink()->appendStylesheet('/css/sitestyles.css');
+			parent::init();
+			$this->_helper->layout()->setLayout('lighthouse');
+			$this->view->headLink()->appendStylesheet('/css/sitestyles.css');
 
-		// Zend_Session::namespaceUnset('Model_Cart');
-		// Zend_Session::namespaceUnset('SearchResults');
+			// Zend_Session::namespaceUnset('Model_Cart');
+			// Zend_Session::namespaceUnset('SearchResults');
     }
 
     public function indexAction()
@@ -199,7 +200,7 @@ class IndexController extends My_Controller_Action
 								}
 							} else {
 								// one of the cart items (spots) became un-available in the time
-								$error = 'One of your reservation types (' . $taken[0]->lot->name . ' ' . $taken[0]->spot->type . ' Parking) has become unavailable since adding to your cart, Check maybe a lower quantity or another spot type.';
+								$reason = 'One of your reservation types (' . $taken[0]->lot->name . ' ' . $taken[0]->spot->type . ' Parking) has become unavailable since adding to your cart, Check maybe a lower quantity or another spot type.';
 								$this->view->error = $reason;
 							}
 						}
@@ -315,9 +316,12 @@ class IndexController extends My_Controller_Action
 					$this->getModel('cart')->setCoupon($coupon);
 
 				}
+				else{
+					$this->_helper->flashMessenger->addMessage("Invalid coupon code");
 			}
-
-
+			else{
+				$this->_helper->flashMessenger->addMessage("Invalid coupon code");
+			}
 		}
 
 		$this->redirect(null, 'index');
