@@ -7,26 +7,30 @@
 			<?php echo $this->form; ?>
 		</div> <!-- end #reservation-filters -->
 	</div>
-<?php */ ?>	
+<?php */ ?>
 	<?php if ($this->coupons): ?>
 		<table>
 			<thead>
 				<th>
 					Code
 				</th>
-				
+
 				<th>
 					Title
 				</th>
-				
+
 				<th>
 					Type
 				</th>
-				
+
+				<th>
+					Type of Parking
+				</th>
+
 				<th>
 					Value
 				</th>
-				
+
 				<th>
 					Expiration
 				</th>
@@ -35,36 +39,40 @@
 					Actions
 				</th>
 			</thead>
-			
+
 			<tfoot>
 				<th>
 					Code
 				</th>
-				
+
 				<th>
 					Title
 				</th>
-				
+
 				<th>
 					Type
 				</th>
-				
+
+				<th>
+					Type of Parking
+				</th>
+
 				<th>
 					Value
 				</th>
-				
+
 				<th>
 					Expiration
 				</th>
-				
+
 				<th>
 					Actions
 				</th>
 			</tfoot>
-			
+
 			<tbody class="highlight">
-				<?php 
-				if (count($this->coupons) > 0) : 
+				<?php
+				if (count($this->coupons) > 0) :
 				foreach ($this->coupons as $coupon): ?>
 					<tr class="<?php echo $this->cycle(array('', 'odd'))->next(); ?>">
 						<td>
@@ -72,35 +80,50 @@
 								<?php echo $coupon->code; ?>
 							</a>
 						</td>
-						
+
 						<td>
 							<?php echo $coupon->title ?>
 						</td>
-						
+
 						<td>
 							<?php echo ucfirst($coupon->type); ?>
 						</td>
-						
+
 						<td>
-							<?php 
+							<?php
+							switch ($coupon->type_parking) :
+								case 'covered':
+									echo 'Covered';
+									break;
+								case 'un-covered':
+									echo 'Un/Covered';
+									break;
+								case 'both':
+									echo 'Both';
+									break;
+							endswitch; ?>
+						</td>
+
+						<td>
+							<?php
 							$value = $coupon->type == 'percent' ? $coupon->value . '%' : '$' . $coupon->value;
-							echo $value; 
+							echo $value;
 							?>
 						</td>
-						
+
 						<td>
 							<?php echo $coupon->expirationDate; ?>
 						</td>
-						
+
 						<td class="last">
 							<a href="<?php echo $this->url(array('controller'=> 'admin', 'action' => 'coupon-edit', 'id' => $coupon->id), 'default', true) ?>" class="button">
 								Edit
 							</a>
 						</td>
 					</tr>
-				<?php 
+				<?php
 				endforeach;
-				else:	
+				else:
 				?>
 					<tr>
 						<td colspan="4">
@@ -113,13 +136,13 @@
 			</tbody>
 		</table>
 	<?php endif ?>
-	
-	<?php 
-	if($this->coupons instanceof Zend_Paginator): 
-	echo $this->paginationControl($this->coupons, 'Sliding', 'admin/_couponPaginator.phtml'); 
-	endif; 
+
+	<?php
+	if($this->coupons instanceof Zend_Paginator):
+	echo $this->paginationControl($this->coupons, 'Sliding', 'admin/_couponPaginator.phtml');
+	endif;
 	?>
-	
+
 	<div class="button-group">
 		<a href="<?php echo $this->url(array('controller' => 'admin', 'action' => 'coupon-edit'), 'default', true) ?>" class="button">Create Coupon</a>
 	</div>

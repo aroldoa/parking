@@ -270,7 +270,6 @@ class IndexController extends My_Controller_Action
 			foreach ($this->_getParam('quantity') as $id => $qty) {
 
 				$item = $this->getModel('cart')->offsetGet($id);
-
 				if (null !== $item) {
 
 					// check the availability of spots
@@ -282,7 +281,28 @@ class IndexController extends My_Controller_Action
 				}
 			}
 
-		} else if ($request->getPost('applycoupon')) {
+		}
+		else if ($request->getPost('applycoupon'))
+		{
+			$type_parking = array();
+			foreach ($this->_getParam('quantity') as $id => $qty)
+			{
+				$item = $this->getModel('cart')->offsetGet($id);
+				if (null !== $item)
+				{
+					switch ($item->spot->type) {
+						case 'Un-Covered':
+							if (! in_array('un-covered', $type_parking))
+								$type_parking[] = 'un-covered';
+							break;
+
+						case 'Covered':
+							if (! in_array('covered', $type_parking))
+								$type_parking[] = 'covered';
+							break;
+					}
+				}
+			}
 
 			$coupon = $this->getModel('coupon')->getCouponByCouponCode($this->_getParam('coupon', null));
 
@@ -290,7 +310,7 @@ class IndexController extends My_Controller_Action
 				$subtotal = $this->getModel('cart')->getSubTotal();
 
 				// make sure coupon still valid
-				if ($coupon->expiration > time()) {
+				if ($coupon->expiration > time() && ($coupon->type_parking === 'both' || in_array($coupon->type_parking, $type_parking))) {
 
 					$this->getModel('cart')->setCoupon($coupon);
 
