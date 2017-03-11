@@ -318,6 +318,7 @@ class IndexController extends My_Controller_Action
 				}
 				else{
 					$this->_helper->flashMessenger->addMessage("Invalid coupon code");
+				}
 			}
 			else{
 				$this->_helper->flashMessenger->addMessage("Invalid coupon code");
