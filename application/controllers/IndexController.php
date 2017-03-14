@@ -317,7 +317,15 @@ class IndexController extends My_Controller_Action
 
 				}
 				else{
-					$this->_helper->flashMessenger->addMessage("Invalid coupon code");
+					switch ($coupon->type_parking) {
+						case 'un-covered':
+							$this->_helper->flashMessenger->addMessage("Code only works for Un-Covered Spots");
+							break;
+
+						case 'covered':
+							$this->_helper->flashMessenger->addMessage("Code only works for Covered Spots");
+							break;
+					}
 				}
 			}
 			else{
