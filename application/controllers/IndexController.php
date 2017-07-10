@@ -292,14 +292,14 @@ class IndexController extends My_Controller_Action
 				if (null !== $item)
 				{
 					switch ($item->spot->type) {
-						case 'Un-Covered':
+						case 'Uncovered':
 							if (! in_array('un-covered', $type_parking))
 								$type_parking[] = 'un-covered';
 							break;
 
-						case 'Covered':
-							if (! in_array('covered', $type_parking))
-								$type_parking[] = 'covered';
+						case 'Park_N_Walk':
+							if (! in_array('park-n-walk', $type_parking))
+								$type_parking[] = 'park-n-walk';
 							break;
 					}
 				}
@@ -322,8 +322,8 @@ class IndexController extends My_Controller_Action
 							$this->_helper->flashMessenger->addMessage("Code only works for Un-Covered Spots");
 							break;
 
-						case 'covered':
-							$this->_helper->flashMessenger->addMessage("Code only works for Covered Spots");
+						case 'park-n-walk':
+							$this->_helper->flashMessenger->addMessage("Code only works for Park n walk");
 							break;
 					}
 				}

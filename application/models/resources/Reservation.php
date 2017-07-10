@@ -1,6 +1,6 @@
 <?php
 /**
-* 
+*
 */
 class Resource_Reservation extends My_Model_Resource_Db_Table_Abstract
 {
@@ -33,16 +33,16 @@ class Resource_Reservation extends My_Model_Resource_Db_Table_Abstract
 			'refTableClass' => 'Resource_Cruise'
 		),
 	);
-	
+
 	public function saveRow($info, $row = null)
     {
-		
+
         if (null === $row) {
             $row = $this->createRow();
 			$row->created = time();
 			$row->transaction = 'Cash';
         }
-        
+
         $columns = $this->info('cols');
         foreach ($columns as $column) {
             if (array_key_exists($column, $info)) {
@@ -52,54 +52,57 @@ class Resource_Reservation extends My_Model_Resource_Db_Table_Abstract
 
 		$row->from = strtotime($info['from']);
 		$row->to = strtotime($info['to']);
-        
+
         return $row->save();
     }
-	
+
 	public function getReservations($options)
 	{
 		$select = $this->select();
-		
+
 		if (isset($options['from'])) {
-			$select->where('`from` = ?', $options['from']);
+
+			$select->where('`from` >= ?', $options['from']);
+			$select->where('`from` <= ?', $options['from']+86399);
 		}
-		
+
 		if (isset($options['to'])) {
-			$select->where('`to` = ?', $options['to']);
+			$select->where('`to` >= ?', $options['to']);
+			$select->where('`to` <= ?', $options['to']+86399);
 		}
-		
+
 		if (isset($options['type']) && $options['type'] != null) {
 			$select->where('`type` = ?', $options['type']);
 		}
-		
+
 		if (isset($options['order'])) {
 			$select->order($options['order']);
 		}
-		
+
 		if (isset($options['lot']) && $options['lot'] != null) {
 			$select->where('`lot` = ?', $options['lot']);
 		}
-		
+
 		if (isset($options['user']) && $options['user'] !== null) {
 			$select->where('`user` = ?', $options['user']);
 		}
-		
+
 		if (isset($options['transaction']) && $options['transaction'] !== null) {
 			$select->where('`transaction` = ?', $options['transaction']);
 		}
-		
+
 		if (isset($options['date']) && $options['date'] !== null) {
 			$select->where('`from` <= ?', $options['date']);
 			$select->where('`to` >= ?', $options['date']);
 		}
-		
+
 		if (isset($options['status'])) {
 			$select->where('`status` = ?', $options['status']);
 		}
-		
+
 		$show = isset($options['show']) ? $options['show'] : 20;
 		$page = isset($options['page']) ? $options['page'] : null;
-		
+
 		if (null !== $page && $show != 'all') {
 			$adapter = new Zend_Paginator_Adapter_DbTableSelect($select);
 			$count = clone $select;
@@ -107,21 +110,21 @@ class Resource_Reservation extends My_Model_Resource_Db_Table_Abstract
 			$count->reset(Zend_Db_Select::FROM);
 			$count->from('reservation', new Zend_Db_Expr('COUNT(*) AS `zend_paginator_row_count`'));
 			$adapter->setRowCount($count);
-			
+
 			$paginator = new Zend_Paginator($adapter);
 			$paginator->setItemCountPerPage($show)->setCurrentPageNumber((int) $page);
-			
+
 			return $paginator;
 		}
-		
+
 		return $this->fetchAll($select);
 	}
-	
+
 	public function getRowById($id)
 	{
 		return $this->find($id)->current();
 	}
-	
+
 	public function getReservationData($page, $recordPerPage) {
         $select = $this->select();
         $select->order(array('from DESC', 'type ASC'));

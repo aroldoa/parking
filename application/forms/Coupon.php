@@ -20,7 +20,7 @@ class Form_Coupon extends My_Form_Abstract
 
 		$typesParking = array(
 			'un-covered' => 'Uncovered',
-			'covered' => 'Covered',
+			'park-n-walk' => 'Park n walk',
 			'both' => 'Both'
 		);
 		$this->addElement('select', 'type_parking', array(
