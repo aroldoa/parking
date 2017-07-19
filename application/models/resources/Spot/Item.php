@@ -32,15 +32,12 @@ class Resource_Spot_Item extends My_Model_Resource_Db_Table_Row_Abstract
 					$days[] = $from += (60 * 60 * 24);
 				}
 
-				// get 15 days before and after
-				$fifteenDays = 15 * 60 * 60 * 24;
+				$from = $options['from'];
+				$to = $options['to'];
 
-				$from = $options['from'] - $fifteenDays;
-				$to = $options['to'] + $fifteenDays;
+				$select->where('`from` <= ?', $from + 86399);
 
-				$select->where('`from` >= ?', $from);
-
-				$select->where('`to` <= ?', $to + 86399);
+				$select->where('`to` >= ?', $to );
 			}
 		}
 
@@ -50,11 +47,6 @@ class Resource_Spot_Item extends My_Model_Resource_Db_Table_Row_Abstract
         // Narrow down the results to just those in range
         $reservations = array();
         foreach ($rowSet as $reservation) {
-            // Skip these as they can't count
-            if ($reservation->from >= $options['to'] || $reservation->to <= $options['from']) {
-                // forget about it
-                continue;
-            }
             $reservations[] = $reservation;
         }
 
@@ -87,9 +79,7 @@ class Resource_Spot_Item extends My_Model_Resource_Db_Table_Row_Abstract
 			$sum = 0;
 
             foreach ($reservations as $reservation) {
-				if ($reservation->from <= $point && $reservation->to >= $point + $oneDay) {
-					$sum += $reservation->quantity;
-				}
+				$sum += $reservation->quantity;
 			}
 			$dailyQuantities[] = $sum;
 			$point += $oneDay;
