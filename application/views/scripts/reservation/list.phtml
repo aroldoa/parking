@@ -1,7 +1,7 @@
 <div id="reservation-list" class="sixteen columns">
 	<h2><?php echo $this->title; ?></h2>
-	
-	<?php 
+
+	<?php
 	if ($this->remaining):
 	?>
 	<div class="remaining-spots padded shadowed rounded">
@@ -9,28 +9,28 @@
 	<?php
 		foreach ($this->remaining as $type => $quantity) :
 	?>
-		
+
 			<?php echo $type ?> : <?php echo $quantity ?>
 			<br />
-		
-	<?php 
+
+	<?php
 		endforeach;
 	?>
 	</div> <!-- end  -->
 	<br />
 	<?php
-	endif; 
+	endif;
 	?>
-	
+
 	<div class="clear"></div>
-	
+
 	<div class="filters-box">
 		<div class="filter-handle">+ Show Filters</div>
 		<div class="list-filters">
 			<?php echo $this->form; ?>
 		</div> <!-- end #reservation-filters -->
-	</div> 
-	
+	</div>
+
 	<table>
 		<thead>
 			<tr>
@@ -46,7 +46,7 @@
 				<th class="last">Days</th>
 			</tr>
 		</thead>
-	
+
 		<tfoot>
 			<tr>
 				<th>Name</th>
@@ -64,7 +64,7 @@
 		<tbody class="highlight">
 	<?php
 	if (count($this->reservations) > 0) :
-		
+
 	foreach ($this->reservations as $reservation) :
 	?>
 	<tr class="<?php echo $this->cycle(array('', 'odd'))->next(); ?>">
@@ -73,47 +73,47 @@
 				<?php echo $reservation->user->fullname; ?>
 			</a>
 		</td>
-		
+
 		<td>
 			<?php echo $reservation->user->phone; ?>
 		</td>
-		
+
 		<td>
 			<?php echo $reservation->transaction->transaction_id; ?>
 		</td>
-	
+
 		<td>
 			<?php echo $reservation->lot->name; ?>
 		</td>
-	
+
 		<td>
 			<?php echo $reservation->type; ?>
 		</td>
-	
+
 		<td>
 			<?php echo $reservation->quantity; ?>
 		</td>
-	
+
 		<td>
-			<?php 
-			if ($reservation->cruise): 
-				echo $reservation->cruise->ship->name; ?>: <?php echo $reservation->cruise->sailDate; 
+			<?php
+			if ($reservation->cruise):
+				echo $reservation->cruise->ship->name; ?>: <?php echo $reservation->fromDate;
 			else:
 			?>
 			<span class="manual">Entered Manually: <?php echo $reservation->fromDate ?></span>
 			<?php
 			endif ?>
-			
+
 		</td>
-		
+
 		<td>
 			<?php echo ucfirst($reservation->status); ?>
 		</td>
-		
+
 		<td>
 			<?php echo $reservation->getTransaction()->amount; ?>
 		</td>
-	
+
 		<td class="last">
 			<?php echo $reservation->days; ?>
 		</td>
@@ -133,14 +133,14 @@
 		</tbody>
 	</table>
 
-	<?php 
-	if($this->reservations instanceof Zend_Paginator): 
-	echo $this->paginationControl($this->reservations, 'Sliding', 'reservation/_paginator.phtml'); 
-	endif; 
+	<?php
+	if($this->reservations instanceof Zend_Paginator):
+	echo $this->paginationControl($this->reservations, 'Sliding', 'reservation/_paginator.phtml');
+	endif;
 	?>
 	<div class="button-group">
 		<a href="<?php echo $this->url(array('controller' => 'reservation', 'action' => 'create'), 'default', true) ?>" class="button">Create Reservation</a>
-		
+
 		<a href="<?php echo $this->url(array('controller' => 'reservation', 'action' => 'list', 'print' => true), 'default', false) ?>" class="button">Printer Friendly</a>
 	</div>
 </div>

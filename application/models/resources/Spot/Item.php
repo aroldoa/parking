@@ -1,52 +1,52 @@
 <?php
 /**
-* 
+*
 */
 class Resource_Spot_Item extends My_Model_Resource_Db_Table_Row_Abstract
 {
-	
+
 	public function getParent()
 	{
 		return $this->findParentRow('Resource_Lot');
 	}
-	
+
 	public function getLot()
 	{
 		return $this->getParent();
 	}
-	
+
 	public function getSpotReservations($options = null)
 	{
 		$select = $this->getTable()->select();
-		
+
 		if ($options != null) {
-			
+
 			if (isset($options['from']) && isset($options['to'])) {
-				
+
 				$from = $options['from'];
-				
+
 				$days = array();
 				$days[] = $from;
-				
+
 				while ($from < $options['to']) {
 					$days[] = $from += (60 * 60 * 24);
 				}
-				
+
 				// get 15 days before and after
 				$fifteenDays = 15 * 60 * 60 * 24;
-				
+
 				$from = $options['from'] - $fifteenDays;
 				$to = $options['to'] + $fifteenDays;
-				
+
 				$select->where('`from` >= ?', $from);
-				$select->where('`to` <= ?', $to);
-				
+
+				$select->where('`to` <= ?', $to + 86399);
 			}
 		}
-		
+
         // Get the wide range rowset
 		$rowSet = $this->findDependentRowset('Resource_Reservation', 'Spot', $select);
-        
+
         // Narrow down the results to just those in range
         $reservations = array();
         foreach ($rowSet as $reservation) {
@@ -57,22 +57,22 @@ class Resource_Spot_Item extends My_Model_Resource_Db_Table_Row_Abstract
             }
             $reservations[] = $reservation;
         }
-		
+
         if (count($reservations) > 0) {
             return $reservations;
         }
-            
+
         return null;
 	}
-	
+
 	public function inventoryRemaining($options)
 	{
 		$reservations = $this->getSpotReservations($options);
-		
+
 		if (null === $reservations) {
 			return $this->quantity;
 		}
-		
+
         // set up some placeholders
 		$from = $options['from'];
 		$to = $options['to'];
@@ -81,11 +81,11 @@ class Resource_Spot_Item extends My_Model_Resource_Db_Table_Row_Abstract
 		$dailyQuantities = array(
 			0 => 0
 		);
-		
+
         // looping through the days finding the max reserved duing timespan
 		while ($point <= $to) {
 			$sum = 0;
-			
+
             foreach ($reservations as $reservation) {
 				if ($reservation->from <= $point && $reservation->to >= $point + $oneDay) {
 					$sum += $reservation->quantity;
@@ -94,31 +94,31 @@ class Resource_Spot_Item extends My_Model_Resource_Db_Table_Row_Abstract
 			$dailyQuantities[] = $sum;
 			$point += $oneDay;
 		}
-        
+
         // echo max($dailyQuantities);
 		return $this->quantity - max($dailyQuantities);
 	}
-	
+
 	public function getPriceTiers()
 	{
 		$select = $this->select();
-		
+
 		$select->order(array('days ASC'));
 		return $this->findDependentRowset('Resource_Spot_Price', 'Spot', $select);
 	}
-	
+
 	public function getPriceTier($days = null)
 	{
 		if (null === $days) {
 			return null;
 		}
-		
+
 		$select = $this->select();
 		$select->where('days = ?', $days);
-		
+
 		return $this->findDependentRowset('Resource_Spot_Price', 'Spot', $select)->current();
 	}
-	
+
 	public function getKeyToType()
 	{
 		$pattern = array(
@@ -129,9 +129,9 @@ class Resource_Spot_Item extends My_Model_Resource_Db_Table_Row_Abstract
 			'/',
 			' '
 		);
-		
+
 		$text = preg_replace($pattern, $replace, $this->type);
-		
+
 		return $text;
 	}
 }
