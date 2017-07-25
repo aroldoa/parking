@@ -76,13 +76,12 @@ class IndexController extends My_Controller_Action
 
 				$spotModel = $this->getModel('Spot');
 				$spots = $spotModel->getSpots($options);
-
 				$remaining = 0;
-
 				foreach ($spots as $spot) {
+					$options['lot'] = $spot->lot->id;
 					$inStock = $spot->inventoryRemaining($options);
 
-					if (!$inStock > 0) {
+					if ($inStock <= 0) {
 						continue;
 					}
 

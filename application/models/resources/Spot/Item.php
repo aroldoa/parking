@@ -15,7 +15,7 @@ class Resource_Spot_Item extends My_Model_Resource_Db_Table_Row_Abstract
 		return $this->getParent();
 	}
 
-	public function getSpotReservations($options = null)
+	public function getSpotReservations($options = null, $new)
 	{
 		$select = $this->getTable()->select();
 
@@ -34,10 +34,18 @@ class Resource_Spot_Item extends My_Model_Resource_Db_Table_Row_Abstract
 
 				$from = $options['from'];
 				$to = $options['to'];
+				$lot = $options['lot'];
 
-				$select->where('`from` <= ?', $from + 86399);
+				if ($new) {
+					$select->where('`from` <= ?', $from+ 86399);
+					$select->where('`to` > ?', $from + 86399);
+				}
+				else {
+					$select->where('`from` <= ?', $from + 86399);
+					$select->where('`to` >= ?', $to );
+				}
 
-				$select->where('`to` >= ?', $to );
+				$select->where('`lot` >= ?', $lot );
 			}
 		}
 
@@ -57,9 +65,9 @@ class Resource_Spot_Item extends My_Model_Resource_Db_Table_Row_Abstract
         return null;
 	}
 
-	public function inventoryRemaining($options)
+	public function inventoryRemaining($options, $new = true)
 	{
-		$reservations = $this->getSpotReservations($options);
+		$reservations = $this->getSpotReservations($options, $new);
 
 		if (null === $reservations) {
 			return $this->quantity;
@@ -86,6 +94,7 @@ class Resource_Spot_Item extends My_Model_Resource_Db_Table_Row_Abstract
 		}
 
         // echo max($dailyQuantities);
+        // echo $this->quantity;
 		return $this->quantity - max($dailyQuantities);
 	}
 
