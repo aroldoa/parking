@@ -1,2 +1,4 @@
 # Ignore sftp file
 /sftp*
+application/configs/application.ini
+application/configs/authorize.net.ini
