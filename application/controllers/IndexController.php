@@ -73,16 +73,15 @@ class IndexController extends My_Controller_Action
 				if ($ship->lot && $ship->lot > 0) {
 					$options['lot'] = $ship->lot;
 				}
-
 				$spotModel = $this->getModel('Spot');
 				$spots = $spotModel->getSpots($options);
-
 				$remaining = 0;
-
 				foreach ($spots as $spot) {
+					$options['lot'] = $spot->lot->id;
 					$inStock = $spot->inventoryRemaining($options);
 
-					if (!$inStock > 0) {
+
+					if ($inStock <= 0) {
 						continue;
 					}
 
@@ -292,11 +291,14 @@ class IndexController extends My_Controller_Action
 				if (null !== $item)
 				{
 					switch ($item->spot->type) {
-						case 'Uncovered':
+						case 'Un-Covered':
 							if (! in_array('un-covered', $type_parking))
 								$type_parking[] = 'un-covered';
 							break;
-
+						case 'Covered':
+							if (! in_array('covered', $type_parking))
+ 								$type_parking[] = 'covered';
+							break;
 						case 'Park_N_Walk':
 							if (! in_array('park-n-walk', $type_parking))
 								$type_parking[] = 'park-n-walk';
@@ -321,7 +323,9 @@ class IndexController extends My_Controller_Action
 						case 'un-covered':
 							$this->_helper->flashMessenger->addMessage("Code only works for Un-Covered Spots");
 							break;
-
+						case 'covered':
+							$this->_helper->flashMessenger->addMessage("Code only works for Covered Spots");
+							break;
 						case 'park-n-walk':
 							$this->_helper->flashMessenger->addMessage("Code only works for Park n walk");
 							break;

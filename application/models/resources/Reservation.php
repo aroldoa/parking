@@ -61,14 +61,11 @@ class Resource_Reservation extends My_Model_Resource_Db_Table_Abstract
 		$select = $this->select();
 
 		if (isset($options['from'])) {
-
-			$select->where('`from` >= ?', $options['from']);
-			$select->where('`from` <= ?', $options['from']+86399);
+			$select->where('`from` = ?', $options['from']);
 		}
 
 		if (isset($options['to'])) {
-			$select->where('`to` >= ?', $options['to']);
-			$select->where('`to` <= ?', $options['to']+86399);
+			$select->where('`to` = ?', $options['to']);
 		}
 
 		if (isset($options['type']) && $options['type'] != null) {

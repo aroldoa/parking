@@ -92,6 +92,9 @@
 						<td>
 							<?php
 							switch ($coupon->type_parking) :
+								case 'covered':
+									echo 'Covered';
+									break;
 								case 'park-n-walk':
 									echo 'Park n walk';
 									break;

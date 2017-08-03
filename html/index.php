@@ -16,11 +16,12 @@ set_include_path(implode(PATH_SEPARATOR, array(
 
 /** Zend_Application */
 require_once 'Zend/Application.php';
-
 // Create application, bootstrap, and run
 $application = new Zend_Application(
     APPLICATION_ENV,
     APPLICATION_PATH . '/configs/application.ini'
 );
+$timezone = "America/Los_Angeles";
+date_default_timezone_set($timezone);
 $application->bootstrap()
             ->run();

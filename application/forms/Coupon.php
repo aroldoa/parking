@@ -19,6 +19,7 @@ class Form_Coupon extends My_Form_Abstract
 		));
 
 		$typesParking = array(
+			'covered' => 'Covered',
 			'un-covered' => 'Uncovered',
 			'park-n-walk' => 'Park n walk',
 			'both' => 'Both'
