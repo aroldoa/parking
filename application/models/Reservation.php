@@ -140,7 +140,7 @@ class Model_Reservation extends My_Model_Abstract
 		return null;
 	}
 
-	public function checkAvailabilityByDate($from, $to, $type, $qty, $held = null)
+	public function checkAvailabilityByDate($from, $to, $type, $qty, $held = null, $admin = false)
 	{
 		if ($qty === null || $type === null) {
 			return null;
@@ -166,6 +166,7 @@ class Model_Reservation extends My_Model_Abstract
 				continue;
 			}
 			$options['lot'] = $spot->lot->id;
+			$options['admin'] = $admin;
 			// if the spots remaining in inventory are greater than the
 			// number of spots requested add the spot to the result array
 			if ($spot->inventoryRemaining($options) >= $qty) {
