@@ -455,8 +455,8 @@ class IndexController extends My_Controller_Action
 		if (count($imgs) == 0) {
 			// get default (lot) images
 			$imgs[] = array(
-				'filename' => 'Default.png',
-				'url' => $imgFolder . 'Default.png'
+				'filename' => 'Default.jpg',
+				'url' => $imgFolder . 'Default.jpg'
 			);
 		}
 

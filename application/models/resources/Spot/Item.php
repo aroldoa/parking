@@ -18,55 +18,41 @@ class Resource_Spot_Item extends My_Model_Resource_Db_Table_Row_Abstract
 	public function getSpotReservations($options = null)
 	{
 		$select = $this->getTable()->select();
-		// var_dump($this->quantity);die();
-		if ($options != null) {
 
-			if (isset($options['from']) && isset($options['to'])) {
-
-				$from = $options['from'];
-
-				$days = array();
-				$days[] = $from;
-
-				while ($from < $options['to']) {
-					$days[] = $from += (60 * 60 * 24);
+		if ($options != null)
+		{
+			if (isset($options['from']) && isset($options['to']))
+			{
+				if (isset($options['admin']) && $options['admin'])
+				{
+					$select->where('`from` <=?', $options['to']);
+					$select->where('`to` > ?', $options['from']);
 				}
-
-				// get 15 days before and after
-				$fifteenDays = 15 * 60 * 60 * 24;
-
-				$from = $options['from'] - $fifteenDays;
-				$to = $options['to'] + $fifteenDays;
-
-					// $select->where('`from` >= ?', $from);
-					// $select->where('`to` <= ?', $to);
+				else
+				{
 					$select->where('`from` <=?', $options['from']);
 					$select->where('`to` > ?', $options['from']);
+				}
 
-					if (isset($options['lot']))
-						$select->where('`lot` = ?', $options['lot']);
+				if (isset($options['lot']))
+					$select->where('`lot` = ?', $options['lot']);
 			}
 		}
 
-        // Get the wide range rowset
+		// Get the wide range rowset
 		$rowSet = $this->findDependentRowset('Resource_Reservation', 'Spot', $select);
 
-        // Narrow down the results to just those in range
-        $reservations = array();
-        foreach ($rowSet as $reservation) {
-            // Skip these as they can't count
-            // if ($reservation->from >= $options['to'] || $reservation->to <= $options['from']) {
-            //     // forget about it
-            //     continue;
-            // }
-            $reservations[] = $reservation;
-        }
+		// Narrow down the results to just those in range
+		$reservations = array();
+		foreach ($rowSet as $reservation) {
+			$reservations[] = $reservation;
+		}
 
-        if (count($reservations) > 0) {
-            return $reservations;
-        }
+		if (count($reservations) > 0) {
+			return $reservations;
+		}
 
-        return null;
+		return null;
 	}
 
 	public function inventoryRemaining($options)
@@ -77,7 +63,7 @@ class Resource_Spot_Item extends My_Model_Resource_Db_Table_Row_Abstract
 			return $this->quantity;
 		}
 
-        // set up some placeholders
+		// set up some placeholders
 		$from = $options['from'];
 		$to = $options['to'];
 		$oneDay = 60 * 60 * 24;
@@ -86,20 +72,17 @@ class Resource_Spot_Item extends My_Model_Resource_Db_Table_Row_Abstract
 			0 => 0
 		);
 
-        // looping through the days finding the max reserved duing timespan
+		// looping through the days finding the max reserved duing timespan
 		while ($point <= $to) {
 			$sum = 0;
-
-            foreach ($reservations as $reservation) {
-				// if ($reservation->from <= $point && $reservation->to >= $point + $oneDay) {
-					$sum += $reservation->quantity;
-				// }
+			foreach ($reservations as $reservation) {
+				$sum += $reservation->quantity;
 			}
+
 			$dailyQuantities[] = $sum;
 			$point += $oneDay;
 		}
 
-        // echo max($dailyQuantities);
 		return $this->quantity - max($dailyQuantities);
 	}
 

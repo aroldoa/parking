@@ -219,7 +219,7 @@ class ReservationController extends My_Controller_Action
 				$type = $form->getValue('type');
 				$qty = $form->getValue('quantity');
 
-				if ($this->getModel('reservation')->checkAvailabilityByDate($from, $to, $type, $qty)) {
+				if ($this->getModel('reservation')->checkAvailabilityByDate($from, $to, $type, $qty, null, true)) {
 					$identity = null == $user ? $this->_identity : $this->getModel('User')->getUserById($user);
 
 					if ($this->getModel('reservation')->save($form->getValues(), $identity)) {
